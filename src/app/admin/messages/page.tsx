@@ -4,9 +4,10 @@ import { useState, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
+import { Suspense } from "react";
 import { Send, User as UserIcon, MessageCircle, ImagePlus, X } from "lucide-react";
 
-export default function AdminMessagesPage() {
+function MessagesContent() {
   const { data: session } = useSession();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -289,5 +290,13 @@ export default function AdminMessagesPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function AdminMessagesPage() {
+  return (
+    <Suspense fallback={<div className="flex h-screen items-center justify-center bg-slate-50"><div className="animate-spin w-8 h-8 border-4 border-brand border-t-transparent rounded-full"></div></div>}>
+      <MessagesContent />
+    </Suspense>
   );
 }
