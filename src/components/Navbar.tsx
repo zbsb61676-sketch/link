@@ -96,7 +96,7 @@ export default function Navbar() {
         <div className="md:hidden border-t border-slate-200 bg-white">
           <div className="container mx-auto px-4 py-4 flex flex-col gap-4">
             {session && (
-              <Link href={session.user?.role === "ADMIN" ? "/admin/messages" : "/dashboard/messages"} className="text-sm font-medium text-slate-600 hover:text-brand transition-colors">
+              <Link href={(session.user as any)?.role === "ADMIN" ? "/admin/messages" : "/dashboard/messages"} className="text-sm font-medium text-slate-600 hover:text-brand transition-colors">
                 Messages
               </Link>
             )}
