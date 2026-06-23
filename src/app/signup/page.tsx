@@ -10,6 +10,7 @@ export default function SignupPage() {
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,7 +25,7 @@ export default function SignupPage() {
       });
 
       if (res.ok) {
-        router.push("/login?registered=true");
+        setSuccess(true);
       } else {
         const data = await res.json();
         setError(data.error || "Failed to register");
@@ -41,7 +42,24 @@ export default function SignupPage() {
       <Navbar />
       <main className="flex-1 flex items-center justify-center p-4">
         <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 w-full max-w-md">
-          <h1 className="text-2xl font-bold text-slate-900 mb-6 text-center">Create an Account</h1>
+          {success ? (
+            <div className="text-center">
+              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+                <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-2">Check your inbox</h3>
+              <p className="text-slate-600 mb-6">
+                We've sent a verification link to <strong>{formData.email}</strong>. Please click the link to activate your account.
+              </p>
+              <Link href="/login" className="text-brand hover:underline font-medium">
+                Return to Login
+              </Link>
+            </div>
+          ) : (
+            <>
+              <h1 className="text-2xl font-bold text-slate-900 mb-6 text-center">Create an Account</h1>
           
           {error && <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm">{error}</div>}
 
@@ -89,6 +107,8 @@ export default function SignupPage() {
           <p className="text-center text-sm text-slate-600 mt-6">
             Already have an account? <Link href="/login" className="text-brand font-medium hover:underline">Log in</Link>
           </p>
+          </>
+          )}
         </div>
       </main>
     </div>

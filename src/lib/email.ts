@@ -1,8 +1,4 @@
-/**
- * This is a simulated email service.
- * Once you have a provider (like Resend, SendGrid, or Nodemailer), 
- * you can replace the console.log with actual API calls.
- */
+import nodemailer from 'nodemailer';
 
 interface SendEmailParams {
   to: string;
@@ -11,18 +7,56 @@ interface SendEmailParams {
 }
 
 export async function sendEmail({ to, subject, html }: SendEmailParams) {
-  // Simulate network delay
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  try {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
 
-  console.log("=========================================");
-  console.log(`📧 SIMULATED EMAIL SENT`);
-  console.log(`TO: ${to}`);
-  console.log(`SUBJECT: ${subject}`);
-  console.log(`BODY:`);
-  console.log(html.replace(/<[^>]*>?/gm, '')); // Strip HTML for console readability
-  console.log("=========================================");
+    await transporter.sendMail({
+      from: `"LinkRent" <${process.env.EMAIL_USER}>`,
+      to,
+      subject,
+      html,
+    });
 
-  return { success: true };
+    console.log(`📧 EMAIL SENT TO: ${to} SUBJECT: ${subject}`);
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to send email:', error);
+    return { success: false, error };
+  }
+}
+
+export async function sendVerificationEmail(email: string, token: string) {
+  const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+  const verifyUrl = `${baseUrl}/verify?token=${token}`;
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px;">
+      <h2 style="color: #0f172a;">Welcome to LinkRent!</h2>
+      <p style="color: #334155; font-size: 16px;">
+        Thank you for signing up. Please click the button below to verify your email address and activate your account.
+      </p>
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${verifyUrl}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px;">
+          Verify Email Address
+        </a>
+      </div>
+      <p style="color: #64748b; font-size: 14px; margin-top: 30px;">
+        If you did not create this account, you can safely ignore this email.
+      </p>
+    </div>
+  `;
+
+  return sendEmail({
+    to: email,
+    subject: 'Verify your LinkRent Account',
+    html,
+  });
 }
 
 export async function sendAccountStatusUpdateEmail(to: string, name: string, status: string) {
