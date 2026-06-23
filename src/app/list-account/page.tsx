@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 
 const listingSchema = z.object({
   connections: z.string().min(1, "Connections are required").regex(/^\d+$/, "Must be a number"),
-  accountAge: z.string().min(1, "Please select an account age"),
+  accountAge: z.string().min(1, "Please select an account age").refine(val => val !== "Less than 1 year", "Account must be at least 1 year old to list"),
   location: z.string().min(2, "Location is required"),
   whatsappNumber: z.string().min(5, "Valid WhatsApp number is required"),
   linkedinUrl: z.string().url("Must be a valid LinkedIn URL"),

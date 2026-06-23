@@ -7,7 +7,7 @@ import { getUserListings } from "@/lib/services/listings";
 
 const listingSchema = z.object({
   connections: z.string().min(1).regex(/^\d+$/),
-  accountAge: z.string().min(1),
+  accountAge: z.string().min(1).refine(val => val !== "Less than 1 year", "Account must be at least 1 year old to list"),
   location: z.string().min(2),
   whatsappNumber: z.string().min(5),
   linkedinUrl: z.string().url(),
