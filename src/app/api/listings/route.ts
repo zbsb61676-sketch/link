@@ -2,17 +2,27 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import * as z from "zod";
+import { getUserListings } from "@/lib/services/listings";
+
+const listingSchema = z.object({
+  connections: z.string().min(1).regex(/^\d+$/),
+  accountAge: z.string().min(1),
+  location: z.string().min(2),
+  whatsappNumber: z.string().min(5),
+  linkedinUrl: z.string().url(),
+  price: z.string().min(1).regex(/^\d+(\.\d{1,2})?$/),
+});
 
 export async function GET() {
   try {
-    const listings = await prisma.accountListing.findMany({
-      include: {
-        owner: {
-          select: { name: true }
-        }
-      },
-      orderBy: { createdAt: "desc" }
-    });
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const userId = (session.user as any).id;
+    const listings = await getUserListings(userId);
     
     return NextResponse.json(listings);
   } catch (error) {
@@ -28,7 +38,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const data = await req.json();
+    const rawData = await req.json();
+    const result = listingSchema.safeParse(rawData);
+    
+    if (!result.success) {
+      return NextResponse.json({ error: "Invalid data format" }, { status: 400 });
+    }
+    
+    const data = result.data;
 
     if (data.linkedinUrl) {
       const existingListing = await prisma.accountListing.findFirst({

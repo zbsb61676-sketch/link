@@ -4,49 +4,80 @@ import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useSession } from "next-auth/react";
-import { redirect, useRouter } from "next/navigation";
-import { CreditCard, Landmark, Save, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { CreditCard, Landmark, Save, Loader2, AlertCircle } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import toast from "react-hot-toast";
+
+const settingsSchema = z.object({
+  paypalEmail: z.string().email("Invalid email address").optional().or(z.literal("")),
+  bankDetails: z.string().optional(),
+}).refine(data => data.paypalEmail || data.bankDetails, {
+  message: "Please provide either a PayPal Email or Bank Details",
+  path: ["paypalEmail"]
+});
+
+type SettingsFormValues = z.infer<typeof settingsSchema>;
 
 export default function SettingsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [formData, setFormData] = useState({
-    paypalEmail: "",
-    bankDetails: "",
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<SettingsFormValues>({
+    resolver: zodResolver(settingsSchema),
+    defaultValues: {
+      paypalEmail: "",
+      bankDetails: "",
+    },
   });
 
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/login");
     } else if (session?.user) {
-      // Initialize form with existing data if available
-      // Note: We might want to fetch this from an API endpoint to ensure freshness
-      // For now, we'll assume it's part of the session or start empty
+      // If we fetch existing settings via API, we would setValue here
+      const fetchSettings = async () => {
+        try {
+          const res = await fetch("/api/user/settings/get");
+          if (res.ok) {
+            const data = await res.json();
+            setValue("paypalEmail", data.paypalEmail || "");
+            setValue("bankDetails", data.bankDetails || "");
+          }
+        } catch(e) {
+          console.error("Could not load existing settings");
+        }
+      }
+      // fetchSettings();
     }
-  }, [status, session, router]);
+  }, [status, session, router, setValue]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: SettingsFormValues) => {
     setLoading(true);
-    setSuccessMessage("");
+    const toastId = toast.loading("Saving settings...");
     
     try {
       const res = await fetch("/api/user/settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(data),
       });
 
       if (res.ok) {
-        setSuccessMessage("Payout settings updated successfully.");
+        toast.success("Payout settings updated successfully.", { id: toastId });
       } else {
-        alert("Failed to update settings");
+        toast.error("Failed to update settings", { id: toastId });
       }
     } catch (error) {
-      console.error(error);
-      alert("An error occurred");
+      toast.error("An unexpected error occurred", { id: toastId });
     } finally {
       setLoading(false);
     }
@@ -67,12 +98,7 @@ export default function SettingsPage() {
             <p className="text-slate-600">Update your payout details to receive payments.</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 space-y-6">
-            {successMessage && (
-              <div className="p-4 bg-green-50 text-green-700 border border-green-100 rounded-lg text-sm font-medium">
-                {successMessage}
-              </div>
-            )}
+          <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 space-y-6">
 
             <div>
               <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
@@ -85,11 +111,11 @@ export default function SettingsPage() {
                   <input 
                     type="email" 
                     placeholder="your@paypal.com" 
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-slate-900 bg-white" 
-                    value={formData.paypalEmail}
-                    onChange={(e) => setFormData({ ...formData, paypalEmail: e.target.value })}
+                    className={`w-full px-4 py-2 border ${errors.paypalEmail ? 'border-red-500 focus:ring-red-500' : 'border-slate-300 focus:ring-brand'} rounded-lg focus:ring-2 outline-none text-slate-900 bg-white`} 
+                    {...register("paypalEmail")}
                   />
-                  <p className="text-xs text-slate-500 mt-1">We will send your monthly payments to this address.</p>
+                  {errors.paypalEmail && <p className="mt-1 text-sm text-red-500 flex items-center gap-1"><AlertCircle size={14}/>{errors.paypalEmail.message}</p>}
+                  {!errors.paypalEmail && <p className="text-xs text-slate-500 mt-1">We will send your monthly payments to this address.</p>}
                 </div>
 
                 <div className="relative py-4 flex items-center">
@@ -104,9 +130,8 @@ export default function SettingsPage() {
                   </label>
                   <textarea 
                     placeholder="Account Name:&#10;Account Number:&#10;Routing/Sort Code:" 
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand outline-none text-slate-900 bg-white h-24 resize-none" 
-                    value={formData.bankDetails}
-                    onChange={(e) => setFormData({ ...formData, bankDetails: e.target.value })}
+                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand outline-none text-slate-900 bg-white h-24 resize-none" 
+                    {...register("bankDetails")}
                   />
                   <p className="text-xs text-slate-500 mt-1">Provide necessary banking details securely.</p>
                 </div>

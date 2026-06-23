@@ -50,6 +50,9 @@ model AccountListing {
   updatedAt     DateTime  @updatedAt
 
   rentals       Rental[]
+
+  @@index([ownerId])
+  @@index([status])
 }
 
 model Rental {

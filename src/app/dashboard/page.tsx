@@ -6,6 +6,8 @@ import Footer from "@/components/Footer";
 import { Briefcase, MapPin, Users, Star, ShieldCheck, Edit2 } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 
+import ListingCardActions from "@/components/ListingCardActions";
+
 export const dynamic = 'force-dynamic';
 
 export default async function DashboardPage() {
@@ -85,12 +87,10 @@ export default async function DashboardPage() {
                     
                     <div className="p-6 bg-slate-50 border-t border-slate-100 flex items-center justify-between mt-auto">
                       <div>
-                        <span className="text-xl font-bold text-slate-900">${account.price}</span>
+                        <span className="text-xl font-bold text-slate-900">\${account.price}</span>
                         <span className="text-slate-500 text-sm"> / month</span>
                       </div>
-                      <button className="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-brand transition-colors">
-                        <Edit2 size={16} /> Edit
-                      </button>
+                      <ListingCardActions listingId={account.id} status={account.status} />
                     </div>
                   </div>
                 );

@@ -23,6 +23,7 @@ export const metadata: Metadata = {
 import { AuthProvider } from "@/components/AuthProvider";
 import { ConsentModal } from "@/components/ConsentModal";
 import Script from "next/script";
+import { Toaster } from "react-hot-toast";
 
 export default function RootLayout({
   children,
@@ -43,6 +44,7 @@ export default function RootLayout({
         <AuthProvider>
           {children}
           <ConsentModal />
+          <Toaster position="bottom-right" />
         </AuthProvider>
       </body>
     </html>
