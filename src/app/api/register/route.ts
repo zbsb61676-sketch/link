@@ -44,7 +44,16 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ user: { id: user.id, email: user.email, name: user.name } }, { status: 201 });
   } catch (error: any) {
-    console.error("Registration error:", error);
-    return NextResponse.json({ error: error.message || "Something went wrong" }, { status: 500 });
+    console.error("================ REGISTRATION ERROR ================");
+    console.error(error);
+    console.error("====================================================");
+    
+    const errorMessage = error?.message || error?.toString() || "Unknown error occurred";
+    const errorStack = error?.stack || "";
+    
+    return NextResponse.json({ 
+      error: `Server Error: ${errorMessage}`,
+      details: errorStack
+    }, { status: 500 });
   }
 }
