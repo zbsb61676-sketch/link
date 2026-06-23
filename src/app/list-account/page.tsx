@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { CheckCircle2, ShieldCheck, DollarSign, AlertCircle } from "lucide-react";
+import { CheckCircle2, ShieldCheck, DollarSign, AlertCircle, Copy } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -24,6 +24,11 @@ type ListingFormValues = z.infer<typeof listingSchema>;
 export default function ListAccountPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
+
+  useEffect(() => {
+    setVerificationCode(`Verify-${Math.random().toString(36).substring(2, 8).toUpperCase()}`);
+  }, []);
 
   const {
     register,
@@ -49,7 +54,7 @@ export default function ListAccountPage() {
       const res = await fetch("/api/listings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, verificationCode }),
       });
 
       if (res.ok) {
@@ -177,6 +182,35 @@ export default function ListAccountPage() {
                       <p className="text-sm text-slate-500 mt-2">We recommend $200-$500 for accounts with 5k+ connections.</p>
                     )}
                   </div>
+
+                  {verificationCode && (
+                    <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mt-8">
+                      <h3 className="text-lg font-bold text-blue-900 mb-2 flex items-center gap-2">
+                        <ShieldCheck className="text-blue-600" size={20} />
+                        Verify Account Ownership
+                      </h3>
+                      <p className="text-blue-800 text-sm mb-4">
+                        To prove you own this LinkedIn profile, please copy the unique code below and paste it anywhere in your LinkedIn profile's <strong>"About"</strong> section. Our team will verify it during the approval process.
+                      </p>
+                      
+                      <div className="flex items-center gap-3">
+                        <div className="bg-white border border-blue-300 px-4 py-3 rounded-lg flex-1 text-center font-mono font-bold text-lg text-slate-900 tracking-wider">
+                          {verificationCode}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText(verificationCode);
+                            toast.success("Code copied to clipboard!");
+                          }}
+                          className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-lg transition-colors flex items-center justify-center"
+                          title="Copy Code"
+                        >
+                          <Copy size={20} />
+                        </button>
+                      </div>
+                    </div>
+                  )}
 
                   <button 
                     type="submit" 

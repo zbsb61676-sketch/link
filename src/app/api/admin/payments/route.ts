@@ -17,11 +17,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
+    const releaseDate = new Date();
+    releaseDate.setDate(releaseDate.getDate() + 7);
+
     const payment = await prisma.paymentRecord.create({
       data: {
         userId,
         amount: parseFloat(amount),
         reference: reference || null,
+        status: "PENDING",
+        releaseDate: releaseDate,
       },
     });
 

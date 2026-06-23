@@ -58,7 +58,12 @@ export default function AdminAccountTableRow({ account, onOpenPayment }: { accou
               Profile Link
             </a>
           ) : (
-            <span className="text-slate-400">No URL</span>
+            <span className="text-slate-400 italic">No Link</span>
+          )}
+          {account.verificationCode && (
+            <span className="mt-1 text-xs font-mono bg-blue-50 text-blue-700 px-2 py-1 rounded border border-blue-200" title="Check if this code is in their LinkedIn About section">
+              {account.verificationCode}
+            </span>
           )}
         </div>
       </td>

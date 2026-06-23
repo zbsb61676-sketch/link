@@ -10,6 +10,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing email or password" }, { status: 400 });
     }
 
+    const disposableDomains = [
+      "mailinator.com", "yopmail.com", "tempmail.com", "10minutemail.com", 
+      "guerrillamail.com", "sharklasers.com", "throwawaymail.com", "temp-mail.org",
+      "fakemail.net", "trashmail.com"
+    ];
+
+    const emailDomain = email.split('@')[1]?.toLowerCase();
+    if (disposableDomains.includes(emailDomain)) {
+      return NextResponse.json({ error: "Disposable email addresses are not allowed for security reasons." }, { status: 400 });
+    }
+
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });

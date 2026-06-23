@@ -20,7 +20,13 @@ export default async function PaymentHistoryPage() {
     orderBy: { paymentDate: "desc" },
   });
 
-  const totalEarned = payments.reduce((sum, payment) => sum + payment.amount, 0);
+  const availableBalance = payments
+    .filter(p => p.status === "COMPLETED")
+    .reduce((sum, payment) => sum + payment.amount, 0);
+
+  const pendingBalance = payments
+    .filter(p => p.status === "PENDING")
+    .reduce((sum, payment) => sum + payment.amount, 0);
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">
@@ -34,9 +40,15 @@ export default async function PaymentHistoryPage() {
               <p className="text-slate-600">Track your earnings and verified payouts.</p>
             </div>
             
-            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm min-w-[200px]">
-              <p className="text-sm font-medium text-slate-500 mb-1">Total Earned</p>
-              <p className="text-3xl font-bold text-emerald-600">${totalEarned.toFixed(2)}</p>
+            <div className="flex gap-4">
+              <div className="bg-white p-4 rounded-xl border border-amber-200 shadow-sm min-w-[150px]">
+                <p className="text-sm font-medium text-amber-600 mb-1">Pending (7-Day Hold)</p>
+                <p className="text-3xl font-bold text-amber-500">${pendingBalance.toFixed(2)}</p>
+              </div>
+              <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm min-w-[150px]">
+                <p className="text-sm font-medium text-slate-500 mb-1">Available to Withdraw</p>
+                <p className="text-3xl font-bold text-emerald-600">${availableBalance.toFixed(2)}</p>
+              </div>
             </div>
           </div>
 
@@ -78,9 +90,26 @@ export default async function PaymentHistoryPage() {
                           <span className="font-bold text-slate-900">${payment.amount.toFixed(2)}</span>
                         </td>
                         <td className="p-4">
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">
-                            PAID
-                          </span>
+                          {payment.status === "PENDING" ? (
+                            <span className="inline-flex flex-col gap-1">
+                              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700 w-fit">
+                                PENDING
+                              </span>
+                              {payment.releaseDate && (
+                                <span className="text-[10px] text-slate-500">
+                                  Releases {new Date(payment.releaseDate).toLocaleDateString()}
+                                </span>
+                              )}
+                            </span>
+                          ) : payment.status === "CANCELLED" ? (
+                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700 w-fit">
+                              CANCELLED
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 w-fit">
+                              PAID
+                            </span>
+                          )}
                         </td>
                         <td className="p-4 text-slate-600 text-sm">
                           {payment.reference ? (

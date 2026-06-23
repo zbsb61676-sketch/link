@@ -12,6 +12,7 @@ const listingSchema = z.object({
   whatsappNumber: z.string().min(5),
   linkedinUrl: z.string().url(),
   price: z.string().min(1).regex(/^\d+(\.\d{1,2})?$/),
+  verificationCode: z.string().optional(),
 });
 
 export async function GET() {
@@ -65,6 +66,7 @@ export async function POST(req: Request) {
         price: parseFloat(data.price),
         linkedinUrl: data.linkedinUrl,
         whatsappNumber: data.whatsappNumber,
+        verificationCode: data.verificationCode,
         ownerId: (session.user as any).id,
       }
     });
