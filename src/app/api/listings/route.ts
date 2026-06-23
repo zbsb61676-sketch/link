@@ -52,6 +52,16 @@ export async function POST(req: Request) {
       }
     });
 
+    // Notify the admin via email!
+    import("@/lib/email").then(({ sendAdminNewListingEmail }) => {
+      sendAdminNewListingEmail({
+        name: session.user?.name || "User",
+        email: session.user?.email || "",
+        connections: listing.connections,
+        linkedinUrl: listing.linkedinUrl || "",
+      }).catch(console.error);
+    });
+
     return NextResponse.json(listing, { status: 201 });
   } catch (error) {
     console.error("Listing creation error:", error);
