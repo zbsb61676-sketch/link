@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import AdminNavbar from "@/components/AdminNavbar";
+import Navbar from "@/components/Navbar";
 import { AlertTriangle, CheckCircle } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 
@@ -32,7 +32,7 @@ export default async function AdminDisputesPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">
-      <AdminNavbar />
+      <Navbar />
       
       <main className="flex-1 p-8">
         <div className="mb-8">
