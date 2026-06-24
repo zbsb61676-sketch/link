@@ -42,11 +42,15 @@ export default async function DashboardPage() {
             </div>
             <div className="flex gap-4 w-full md:w-auto">
               <div className="bg-white rounded-lg p-3 border border-blue-100 shadow-sm flex-1 text-center">
-                <div className="text-xs font-semibold text-slate-500 uppercase">100+ Connections</div>
+                <div className="text-xs font-semibold text-slate-500 uppercase">100+ Conn.</div>
+                <div className="text-xl font-extrabold text-slate-900">₹200<span className="text-sm text-slate-500 font-normal">/wk</span></div>
+              </div>
+              <div className="bg-white rounded-lg p-3 border border-blue-100 shadow-sm flex-1 text-center">
+                <div className="text-xs font-semibold text-slate-500 uppercase">500+ Conn.</div>
                 <div className="text-xl font-extrabold text-slate-900">₹400<span className="text-sm text-slate-500 font-normal">/wk</span></div>
               </div>
               <div className="bg-brand rounded-lg p-3 shadow-md flex-1 text-center text-white">
-                <div className="text-xs font-semibold text-blue-100 uppercase">1,000+ Connections</div>
+                <div className="text-xs font-semibold text-blue-100 uppercase">1k+ Conn.</div>
                 <div className="text-xl font-extrabold text-white">₹900<span className="text-sm text-blue-200 font-normal">/wk</span></div>
               </div>
             </div>

@@ -278,16 +278,16 @@ export default function ListAccountPage() {
                 <p className="text-sm text-slate-600 mb-4">Earnings depend on your industry, location, and connection count.</p>
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
-                    <span className="text-slate-500">Sales / IT (10k+ conn)</span>
+                    <span className="text-slate-500">Tier 3 (1,000+ conn)</span>
                     <span className="font-semibold text-slate-900">~₹900/wk</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-slate-500">Marketing (5k+ conn)</span>
+                    <span className="text-slate-500">Tier 2 (500-999 conn)</span>
                     <span className="font-semibold text-slate-900">~₹400/wk</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-slate-500">Other (1k+ conn)</span>
-                    <span className="font-semibold text-slate-900">~₹400/wk</span>
+                    <span className="text-slate-500">Tier 1 (100-499 conn)</span>
+                    <span className="font-semibold text-slate-900">~₹200/wk</span>
                   </div>
                 </div>
               </div>

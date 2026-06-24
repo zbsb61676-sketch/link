@@ -95,17 +95,30 @@ export default function Home() {
               <p className="text-slate-600">No complicated formulas. You get paid a flat weekly rate based on your account's network size. All accounts must be at least 1 year old.</p>
             </div>
             
-            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              {/* Tier 1 */}
               <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm flex flex-col items-center text-center">
-                <div className="text-slate-500 font-medium mb-2 uppercase tracking-wide text-sm">Starter Tier</div>
-                <div className="text-4xl font-extrabold text-slate-900 mb-2">₹400 <span className="text-lg text-slate-500 font-medium">/ week</span></div>
-                <p className="text-slate-600 mb-6 border-b border-slate-100 pb-6 w-full">Perfect for newer networking accounts.</p>
+                <div className="text-slate-500 font-medium mb-2 uppercase tracking-wide text-sm">Basic Tier</div>
+                <div className="text-4xl font-extrabold text-slate-900 mb-2">₹200 <span className="text-lg text-slate-500 font-medium">/ week</span></div>
+                <p className="text-slate-600 mb-6 border-b border-slate-100 pb-6 w-full">For accounts just getting started.</p>
                 <ul className="text-left space-y-3 w-full">
                   <li className="flex items-center gap-2 text-slate-700"><CheckCircle2 size={16} className="text-brand"/> Minimum 1 Year Old</li>
-                  <li className="flex items-center gap-2 text-slate-700"><CheckCircle2 size={16} className="text-brand"/> 100 to 999 Connections</li>
+                  <li className="flex items-center gap-2 text-slate-700"><CheckCircle2 size={16} className="text-brand"/> 100 to 499 Connections</li>
                 </ul>
               </div>
 
+              {/* Tier 2 */}
+              <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm flex flex-col items-center text-center">
+                <div className="text-slate-500 font-medium mb-2 uppercase tracking-wide text-sm">Starter Tier</div>
+                <div className="text-4xl font-extrabold text-slate-900 mb-2">₹400 <span className="text-lg text-slate-500 font-medium">/ week</span></div>
+                <p className="text-slate-600 mb-6 border-b border-slate-100 pb-6 w-full">Perfect for growing networks.</p>
+                <ul className="text-left space-y-3 w-full">
+                  <li className="flex items-center gap-2 text-slate-700"><CheckCircle2 size={16} className="text-brand"/> Minimum 1 Year Old</li>
+                  <li className="flex items-center gap-2 text-slate-700"><CheckCircle2 size={16} className="text-brand"/> 500 to 999 Connections</li>
+                </ul>
+              </div>
+
+              {/* Tier 3 */}
               <div className="bg-slate-900 rounded-2xl p-8 border border-slate-800 shadow-xl relative overflow-hidden flex flex-col items-center text-center transform md:-translate-y-4">
                 <div className="absolute top-0 right-0 bg-brand text-white text-xs font-bold px-3 py-1 rounded-bl-lg">POPULAR</div>
                 <div className="text-brand font-medium mb-2 uppercase tracking-wide text-sm">Standard Tier</div>

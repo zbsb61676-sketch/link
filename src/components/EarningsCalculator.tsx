@@ -11,16 +11,19 @@ export default function EarningsCalculator() {
 
   useEffect(() => {
     // New Tiered Pricing Logic:
-    // 0-99 connections: ₹0 (Not eligible, but we show 0)
-    // 100-999 connections (1+ years): ₹400 / week
+    // 0-99 connections: ₹0
+    // 100-499 connections (1+ years): ₹200 / week
+    // 500-999 connections (1+ years): ₹400 / week
     // 1000+ connections (1+ years): ₹900 / week
     
     let calc = 0;
     if (age >= 1) {
       if (connections >= 1000) {
         calc = 900;
-      } else if (connections >= 100) {
+      } else if (connections >= 500) {
         calc = 400;
+      } else if (connections >= 100) {
+        calc = 200;
       }
     }
     
