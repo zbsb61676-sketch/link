@@ -4,9 +4,9 @@ import Footer from "@/components/Footer";
 import EarningsCalculator from "@/components/EarningsCalculator";
 import { ArrowRight, CheckCircle2, TrendingUp, ShieldCheck, Lock, DollarSign } from "lucide-react";
 import { prisma } from "@/lib/prisma";
+import AnimatedCounter from "@/components/AnimatedCounter";
 
-// Revalidate this page every hour so the static total payout number updates periodically
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const aggregate = await prisma.paymentRecord.aggregate({
@@ -175,7 +175,7 @@ export default async function Home() {
               <div className="grid grid-cols-2 gap-4">
                 {[
                   { label: "Active Partners", value: "250+" },
-                  { label: "Total Paid Out", value: `₹${(totalPaidOut || 0).toLocaleString()}` },
+                  { label: "Total Paid Out", value: <AnimatedCounter value={totalPaidOut} /> },
                   { label: "Avg. Weekly Earn", value: "₹900" },
                   { label: "Account Safety", value: "100%" },
                 ].map((stat, i) => (
