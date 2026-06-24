@@ -27,7 +27,8 @@ export default async function AdminPaymentsPage() {
         }
       },
       rental: {
-        include: {
+        select: {
+          lastHealthStatus: true,
           listing: {
             select: {
               linkedinUrl: true

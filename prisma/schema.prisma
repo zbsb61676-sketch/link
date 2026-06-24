@@ -69,6 +69,7 @@ model Rental {
   
   lastPaymentDate DateTime?
   nextPaymentDate DateTime?
+  lastHealthStatus String   @default("HEALTHY") // HEALTHY, NEEDS_REVIEW
   
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt

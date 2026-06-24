@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CheckSquare, Square, DollarSign, Clock, ExternalLink, CheckCircle2 } from "lucide-react";
+import { CheckSquare, Square, DollarSign, Clock, ExternalLink, CheckCircle2, AlertTriangle } from "lucide-react";
 import toast from "react-hot-toast";
 
 interface Payment {
@@ -16,6 +16,7 @@ interface Payment {
     bankDetails: string | null;
   };
   rental: {
+    lastHealthStatus: string;
     listing: {
       linkedinUrl: string | null;
     }
@@ -195,9 +196,16 @@ export default function AdminPaymentsTableClient({ initialPayments }: { initialP
                     </td>
                     <td className="p-4">
                       {payment.rental?.listing?.linkedinUrl ? (
-                        <a href={payment.rental.listing.linkedinUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-brand hover:underline text-sm font-medium">
-                          Profile <ExternalLink size={14} />
-                        </a>
+                        <div className="flex items-center gap-2">
+                          <a href={payment.rental.listing.linkedinUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-brand hover:underline text-sm font-medium">
+                            Profile <ExternalLink size={14} />
+                          </a>
+                          {payment.rental.lastHealthStatus === "NEEDS_REVIEW" && (
+                            <div className="text-red-500 bg-red-50 p-1 rounded-md" title="Health Check Failed: LinkedIn URL returned 404 or 999. Please review manually.">
+                              <AlertTriangle size={16} />
+                            </div>
+                          )}
+                        </div>
                       ) : (
                         <span className="text-sm text-slate-400">N/A</span>
                       )}

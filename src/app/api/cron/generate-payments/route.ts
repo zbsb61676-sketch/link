@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function GET(request: Request) {
   try {
@@ -19,7 +22,11 @@ export async function GET(request: Request) {
         status: "ACTIVE"
       },
       include: {
-        listing: true,
+        listing: {
+          include: {
+            owner: true
+          }
+        },
         renter: true
       }
     });
@@ -57,6 +64,19 @@ export async function GET(request: Request) {
             }
           });
           
+          if (rental.listing.owner.email && process.env.RESEND_API_KEY) {
+            try {
+              await resend.emails.send({
+                from: "LinkRent Payouts <payouts@linkrent.in>",
+                to: rental.listing.owner.email,
+                subject: "Your LinkRent payout is ready!",
+                html: `<p>Great news! Your payout of <strong>₹${price}</strong> has been generated.</p><p>Log into your dashboard to request your payout.</p>`
+              });
+            } catch (err) {
+              console.error("Failed to send 24h payout email", err);
+            }
+          }
+          
           paymentsGenerated++;
         }
       } 
@@ -83,6 +103,19 @@ export async function GET(request: Request) {
             nextPaymentDate: nextDate
           }
         });
+        
+        if (rental.listing.owner.email && process.env.RESEND_API_KEY) {
+          try {
+            await resend.emails.send({
+              from: "LinkRent Payouts <payouts@linkrent.in>",
+              to: rental.listing.owner.email,
+              subject: "Your LinkRent payout is ready!",
+              html: `<p>Great news! Your payout of <strong>₹${price}</strong> has been generated.</p><p>Log into your dashboard to request your payout.</p>`
+            });
+          } catch (err) {
+            console.error("Failed to send 7d payout email", err);
+          }
+        }
         
         paymentsGenerated++;
       }
