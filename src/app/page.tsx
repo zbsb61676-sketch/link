@@ -19,8 +19,8 @@ export default async function Home() {
   });
 
   const dbTotalPaidOut = aggregate._sum.amount || 0;
-  // Let's add a base of 4.5M (the previous static amount) so it doesn't suddenly drop to 0 if the DB is fresh
-  const totalPaidOut = 4500000 + dbTotalPaidOut;
+  // Use exact real payout sum from the database
+  const totalPaidOut = dbTotalPaidOut;
 
   return (
     <div className="flex min-h-screen flex-col">
