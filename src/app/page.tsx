@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import EarningsCalculator from "@/components/EarningsCalculator";
 import { ArrowRight, CheckCircle2, TrendingUp, ShieldCheck, Lock, DollarSign } from "lucide-react";
 
 export default function Home() {
@@ -44,6 +45,9 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* Earnings Calculator Section */}
+        <EarningsCalculator />
 
         {/* Features Section */}
         <section className="py-24 bg-white">
