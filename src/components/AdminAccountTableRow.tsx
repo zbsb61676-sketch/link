@@ -69,7 +69,7 @@ export default function AdminAccountTableRow({ account, onOpenPayment }: { accou
       </td>
 
       <td className="p-4 font-bold text-slate-900">
-        ${account.price}
+        ₹{account.price}
       </td>
 
       <td className="p-4">

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { CheckCircle2, ShieldCheck, DollarSign, AlertCircle, Copy } from "lucide-react";
+import { CheckCircle2, ShieldCheck, IndianRupee, AlertCircle, Copy } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -166,9 +166,9 @@ export default function ListAccountPage() {
                   <hr className="border-slate-200" />
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">Monthly Rental Price ($)</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">Weekly Rental Price (₹)</label>
                     <div className="relative max-w-xs">
-                      <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                      <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                       <input 
                         type="number" 
                         placeholder="300" 
@@ -179,7 +179,7 @@ export default function ListAccountPage() {
                     {errors.price ? (
                       <p className="mt-1 text-sm text-red-500 flex items-center gap-1"><AlertCircle size={14}/> {errors.price.message}</p>
                     ) : (
-                      <p className="text-sm text-slate-500 mt-2">We recommend $200-$500 for accounts with 5k+ connections.</p>
+                      <p className="text-sm text-slate-500 mt-2">We recommend ₹900 for accounts with 1k+ connections.</p>
                     )}
                   </div>
 
@@ -253,15 +253,15 @@ export default function ListAccountPage() {
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
                     <span className="text-slate-500">Sales / IT (10k+ conn)</span>
-                    <span className="font-semibold text-slate-900">~$500/mo</span>
+                    <span className="font-semibold text-slate-900">~₹900/wk</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-slate-500">Marketing (5k+ conn)</span>
-                    <span className="font-semibold text-slate-900">~$350/mo</span>
+                    <span className="font-semibold text-slate-900">~₹400/wk</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-slate-500">Other (1k+ conn)</span>
-                    <span className="font-semibold text-slate-900">~$150/mo</span>
+                    <span className="font-semibold text-slate-900">~₹400/wk</span>
                   </div>
                 </div>
               </div>

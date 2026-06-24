@@ -87,6 +87,39 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Pricing Breakdown Section */}
+        <section className="py-16 bg-slate-50 border-t border-slate-200">
+          <div className="container mx-auto px-4">
+            <div className="text-center max-w-3xl mx-auto mb-12">
+              <h2 className="text-3xl font-bold text-slate-900 mb-4">Simple, Transparent Pricing</h2>
+              <p className="text-slate-600">No complicated formulas. You get paid a flat weekly rate based on your account's network size. All accounts must be at least 1 year old.</p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm flex flex-col items-center text-center">
+                <div className="text-slate-500 font-medium mb-2 uppercase tracking-wide text-sm">Starter Tier</div>
+                <div className="text-4xl font-extrabold text-slate-900 mb-2">₹400 <span className="text-lg text-slate-500 font-medium">/ week</span></div>
+                <p className="text-slate-600 mb-6 border-b border-slate-100 pb-6 w-full">Perfect for newer networking accounts.</p>
+                <ul className="text-left space-y-3 w-full">
+                  <li className="flex items-center gap-2 text-slate-700"><CheckCircle2 size={16} className="text-brand"/> Minimum 1 Year Old</li>
+                  <li className="flex items-center gap-2 text-slate-700"><CheckCircle2 size={16} className="text-brand"/> 100 to 999 Connections</li>
+                </ul>
+              </div>
+
+              <div className="bg-slate-900 rounded-2xl p-8 border border-slate-800 shadow-xl relative overflow-hidden flex flex-col items-center text-center transform md:-translate-y-4">
+                <div className="absolute top-0 right-0 bg-brand text-white text-xs font-bold px-3 py-1 rounded-bl-lg">POPULAR</div>
+                <div className="text-brand font-medium mb-2 uppercase tracking-wide text-sm">Standard Tier</div>
+                <div className="text-4xl font-extrabold text-white mb-2">₹900 <span className="text-lg text-slate-400 font-medium">/ week</span></div>
+                <p className="text-slate-300 mb-6 border-b border-slate-700 pb-6 w-full">For established, highly-connected accounts.</p>
+                <ul className="text-left space-y-3 w-full">
+                  <li className="flex items-center gap-2 text-slate-200"><CheckCircle2 size={16} className="text-brand"/> Minimum 1 Year Old</li>
+                  <li className="flex items-center gap-2 text-slate-200"><CheckCircle2 size={16} className="text-brand"/> 1,000+ Connections</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Stats/Social Proof Section */}
         <section className="py-24 bg-slate-900 text-white relative overflow-hidden">
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
@@ -98,7 +131,7 @@ export default function Home() {
                   Your aged, highly-connected LinkedIn account is a valuable asset. Let us put it to work for you while you retain complete ownership.
                 </p>
                 <ul className="space-y-4 mb-8">
-                  {['Earn $200 - $500+ per month', 'We handle all the outreach', 'You can revoke access at any time'].map((item, i) => (
+                  {['Earn ₹1,600 - ₹3,600+ per month', 'We handle all the outreach', 'You can revoke access at any time'].map((item, i) => (
                     <li key={i} className="flex items-center gap-3 text-slate-200">
                       <CheckCircle2 className="text-brand" size={20} />
                       {item}
@@ -112,8 +145,8 @@ export default function Home() {
               <div className="grid grid-cols-2 gap-4">
                 {[
                   { label: "Active Partners", value: "2,500+" },
-                  { label: "Total Paid Out", value: "$450k+" },
-                  { label: "Avg. Monthly Earn", value: "$350" },
+                  { label: "Total Paid Out", value: "₹4.5M+" },
+                  { label: "Avg. Weekly Earn", value: "₹900" },
                   { label: "Account Safety", value: "99.8%" },
                 ].map((stat, i) => (
                   <div key={i} className="bg-slate-800/50 backdrop-blur-sm p-6 rounded-2xl border border-slate-700 text-center">

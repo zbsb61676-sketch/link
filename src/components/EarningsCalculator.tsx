@@ -10,17 +10,18 @@ export default function EarningsCalculator() {
   const [earnings, setEarnings] = useState(0);
 
   useEffect(() => {
-    // Base rate: $50
-    // +$10 for every 500 connections above 0 (up to 10k max calculation for slider)
-    // +$20 for every year of age
+    // New Tiered Pricing Logic:
+    // 0-99 connections: ₹0 (Not eligible, but we show 0)
+    // 100-999 connections (1+ years): ₹400 / week
+    // 1000+ connections (1+ years): ₹900 / week
     
-    let calc = 50;
-    calc += Math.floor(connections / 500) * 10;
-    calc += age * 20;
-    
-    // Add a slight premium multiplier if both are high
-    if (connections > 5000 && age >= 5) {
-      calc = Math.floor(calc * 1.2);
+    let calc = 0;
+    if (age >= 1) {
+      if (connections >= 1000) {
+        calc = 900;
+      } else if (connections >= 100) {
+        calc = 400;
+      }
     }
     
     setEarnings(calc);
@@ -106,9 +107,9 @@ export default function EarningsCalculator() {
             <p className="text-slate-300 text-sm font-medium uppercase tracking-wider mb-2 relative z-10">Estimated Payout</p>
             
             <div className="flex items-start gap-1 relative z-10 mb-6">
-              <span className="text-3xl font-bold text-emerald-400 mt-2">$</span>
+              <span className="text-3xl font-bold text-emerald-400 mt-2">₹</span>
               <span className="text-7xl font-extrabold tracking-tight text-white">{earnings}</span>
-              <span className="text-slate-400 font-medium self-end mb-2">/mo</span>
+              <span className="text-slate-400 font-medium self-end mb-2">/week</span>
             </div>
 
             <Link href="/list-account" className="w-full relative z-10 py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_25px_rgba(16,185,129,0.5)] hover:-translate-y-0.5 flex items-center justify-center gap-2">

@@ -43,11 +43,11 @@ export default async function PaymentHistoryPage() {
             <div className="flex gap-4">
               <div className="bg-white p-4 rounded-xl border border-amber-200 shadow-sm min-w-[150px]">
                 <p className="text-sm font-medium text-amber-600 mb-1">Pending (7-Day Hold)</p>
-                <p className="text-3xl font-bold text-amber-500">${pendingBalance.toFixed(2)}</p>
+                <p className="text-3xl font-bold text-amber-500">₹{pendingBalance.toFixed(2)}</p>
               </div>
               <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm min-w-[150px]">
                 <p className="text-sm font-medium text-slate-500 mb-1">Available to Withdraw</p>
-                <p className="text-3xl font-bold text-emerald-600">${availableBalance.toFixed(2)}</p>
+                <p className="text-3xl font-bold text-emerald-600">₹{availableBalance.toFixed(2)}</p>
               </div>
             </div>
           </div>
@@ -87,7 +87,7 @@ export default async function PaymentHistoryPage() {
                           </div>
                         </td>
                         <td className="p-4">
-                          <span className="font-bold text-slate-900">${payment.amount.toFixed(2)}</span>
+                          <span className="font-bold text-slate-900">₹{payment.amount.toFixed(2)}</span>
                         </td>
                         <td className="p-4">
                           {payment.status === "PENDING" ? (
