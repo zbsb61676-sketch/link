@@ -34,6 +34,8 @@ export default function ListAccountPage() {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<ListingFormValues>({
     resolver: zodResolver(listingSchema),
@@ -46,6 +48,21 @@ export default function ListAccountPage() {
       price: "",
     },
   });
+
+  const connections = watch("connections");
+
+  useEffect(() => {
+    const connCount = parseInt(connections) || 0;
+    if (connCount >= 1000) {
+      setValue("price", "900");
+    } else if (connCount >= 500) {
+      setValue("price", "400");
+    } else if (connCount >= 100) {
+      setValue("price", "200");
+    } else {
+      setValue("price", ""); // Or leave it blank if they don't qualify
+    }
+  }, [connections, setValue]);
 
   const onSubmit = async (data: ListingFormValues) => {
     setLoading(true);
@@ -197,15 +214,16 @@ export default function ListAccountPage() {
                       <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                       <input 
                         type="number" 
-                        placeholder="300" 
-                        className={`w-full pl-10 pr-4 py-3 text-lg font-medium border ${errors.price ? 'border-red-500 focus:ring-red-500' : 'border-slate-300 focus:ring-brand'} rounded-lg focus:ring-2 outline-none text-slate-900 bg-white`} 
+                        placeholder="Automatically calculated" 
+                        className={`w-full pl-10 pr-4 py-3 text-lg font-medium border ${errors.price ? 'border-red-500 focus:ring-red-500' : 'border-slate-300 focus:ring-brand'} rounded-lg focus:ring-2 outline-none text-slate-700 bg-slate-100 cursor-not-allowed`} 
                         {...register("price")}
+                        readOnly
                       />
                     </div>
                     {errors.price ? (
                       <p className="mt-1 text-sm text-red-500 flex items-center gap-1"><AlertCircle size={14}/> {errors.price.message}</p>
                     ) : (
-                      <p className="text-sm text-slate-500 mt-2">We recommend ₹900 for accounts with 1k+ connections.</p>
+                      <p className="text-sm text-slate-500 mt-2">Price is automatically calculated based on your connection count.</p>
                     )}
                   </div>
 
