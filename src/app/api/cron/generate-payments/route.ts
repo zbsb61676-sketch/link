@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
 
 export async function GET(request: Request) {
   try {
@@ -64,16 +70,16 @@ export async function GET(request: Request) {
             }
           });
           
-          if (rental.listing.owner.email && process.env.RESEND_API_KEY) {
+          if (rental.listing.owner.email && process.env.SMTP_USER && process.env.SMTP_PASS) {
             try {
-              await resend.emails.send({
-                from: "LinkRent Payouts <payouts@linkrent.in>",
+              await transporter.sendMail({
+                from: `"LinkRent Payouts" <${process.env.SMTP_USER}>`,
                 to: rental.listing.owner.email,
                 subject: "Your LinkRent payout is ready!",
                 html: `<p>Great news! Your payout of <strong>₹${price}</strong> has been generated.</p><p>Log into your dashboard to request your payout.</p>`
               });
             } catch (err) {
-              console.error("Failed to send 24h payout email", err);
+              console.error("Failed to send 24h payout email via SMTP", err);
             }
           }
           
@@ -104,16 +110,16 @@ export async function GET(request: Request) {
           }
         });
         
-        if (rental.listing.owner.email && process.env.RESEND_API_KEY) {
+        if (rental.listing.owner.email && process.env.SMTP_USER && process.env.SMTP_PASS) {
           try {
-            await resend.emails.send({
-              from: "LinkRent Payouts <payouts@linkrent.in>",
+            await transporter.sendMail({
+              from: `"LinkRent Payouts" <${process.env.SMTP_USER}>`,
               to: rental.listing.owner.email,
               subject: "Your LinkRent payout is ready!",
               html: `<p>Great news! Your payout of <strong>₹${price}</strong> has been generated.</p><p>Log into your dashboard to request your payout.</p>`
             });
           } catch (err) {
-            console.error("Failed to send 7d payout email", err);
+            console.error("Failed to send 7d payout email via SMTP", err);
           }
         }
         
