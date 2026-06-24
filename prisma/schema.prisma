@@ -67,21 +67,29 @@ model Rental {
   endDate       DateTime?
   status        String    @default("ACTIVE") // ACTIVE, CANCELLED, COMPLETED
   
+  lastPaymentDate DateTime?
+  nextPaymentDate DateTime?
+  
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   
   disputes      Dispute[]
+  payments      PaymentRecord[]
 }
 
 model PaymentRecord {
   id            String    @id @default(cuid())
   userId        String
   user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  rentalId      String?
+  rental        Rental?   @relation(fields: [rentalId], references: [id], onDelete: SetNull)
+  
   amount        Float
   paymentDate   DateTime  @default(now())
   reference     String?
   
-  status        String    @default("PENDING") // PENDING, COMPLETED, CANCELLED
+  status        String    @default("PENDING") // PENDING, VERIFIED, COMPLETED, CANCELLED
   releaseDate   DateTime?
 
   createdAt     DateTime  @default(now())

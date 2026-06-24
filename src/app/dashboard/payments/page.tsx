@@ -20,12 +20,12 @@ export default async function PaymentHistoryPage() {
     orderBy: { paymentDate: "desc" },
   });
 
-  const availableBalance = payments
+  const paidBalance = payments
     .filter(p => p.status === "COMPLETED")
     .reduce((sum, payment) => sum + payment.amount, 0);
 
   const pendingBalance = payments
-    .filter(p => p.status === "PENDING")
+    .filter(p => p.status === "PENDING" || p.status === "VERIFIED")
     .reduce((sum, payment) => sum + payment.amount, 0);
 
   return (
@@ -42,12 +42,12 @@ export default async function PaymentHistoryPage() {
             
             <div className="flex gap-4">
               <div className="bg-white p-4 rounded-xl border border-amber-200 shadow-sm min-w-[150px]">
-                <p className="text-sm font-medium text-amber-600 mb-1">Pending (7-Day Hold)</p>
+                <p className="text-sm font-medium text-amber-600 mb-1">Pending / Processing</p>
                 <p className="text-3xl font-bold text-amber-500">₹{pendingBalance.toFixed(2)}</p>
               </div>
               <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm min-w-[150px]">
-                <p className="text-sm font-medium text-slate-500 mb-1">Available to Withdraw</p>
-                <p className="text-3xl font-bold text-emerald-600">₹{availableBalance.toFixed(2)}</p>
+                <p className="text-sm font-medium text-slate-500 mb-1">Total Paid</p>
+                <p className="text-3xl font-bold text-emerald-600">₹{paidBalance.toFixed(2)}</p>
               </div>
             </div>
           </div>
@@ -95,11 +95,15 @@ export default async function PaymentHistoryPage() {
                               <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700 w-fit">
                                 PENDING
                               </span>
-                              {payment.releaseDate && (
-                                <span className="text-[10px] text-slate-500">
-                                  Releases {new Date(payment.releaseDate).toLocaleDateString()}
-                                </span>
-                              )}
+                            </span>
+                          ) : payment.status === "VERIFIED" ? (
+                            <span className="inline-flex flex-col gap-1">
+                              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700 w-fit">
+                                VERIFIED
+                              </span>
+                              <span className="text-[10px] text-slate-500">
+                                Awaiting Friday Payout
+                              </span>
                             </span>
                           ) : payment.status === "CANCELLED" ? (
                             <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700 w-fit">

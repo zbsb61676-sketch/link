@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ShieldCheck, DollarSign, MessageCircle } from "lucide-react";
 
-export default function AdminAccountTableRow({ account, onOpenPayment }: { account: any, onOpenPayment: () => void }) {
+export default function AdminAccountTableRow({ account }: { account: any }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -122,13 +122,6 @@ export default function AdminAccountTableRow({ account, onOpenPayment }: { accou
             </>
           ) : account.status === 'RENTED' ? (
             <>
-              <button 
-                onClick={onOpenPayment}
-                className="px-3 py-1.5 bg-emerald-100 text-emerald-700 text-xs font-medium rounded hover:bg-emerald-200 transition-colors flex items-center gap-1"
-                title="Record Payment"
-              >
-                <DollarSign size={14} /> Pay
-              </button>
               <button 
                 onClick={() => updateStatus('AVAILABLE')}
                 disabled={loading}

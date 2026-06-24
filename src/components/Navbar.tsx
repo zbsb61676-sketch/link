@@ -23,9 +23,14 @@ export default function Navbar() {
           {session ? (
             <>
               {(session.user as any)?.role === "ADMIN" && (
-                <Link href="/admin/accounts" className="text-sm font-medium text-slate-600 hover:text-brand transition-colors">
-                  Admin Panel
-                </Link>
+                <>
+                  <Link href="/admin/accounts" className="text-sm font-medium text-slate-600 hover:text-brand transition-colors">
+                    Admin Panel
+                  </Link>
+                  <Link href="/admin/payments" className="text-sm font-medium text-slate-600 hover:text-brand transition-colors">
+                    Admin Payouts
+                  </Link>
+                </>
               )}
               <Link href="/dashboard" className="text-sm font-medium text-slate-600 hover:text-brand transition-colors">
                 My Accounts
@@ -110,9 +115,14 @@ export default function Navbar() {
                   <span>{session.user?.name}</span>
                 </div>
                 {(session.user as any)?.role === "ADMIN" && (
-                  <Link onClick={() => setIsMobileMenuOpen(false)} href="/admin/accounts" className="text-sm font-medium text-slate-600 hover:text-brand">
-                    Admin Panel
-                  </Link>
+                  <>
+                    <Link onClick={() => setIsMobileMenuOpen(false)} href="/admin/accounts" className="text-sm font-medium text-slate-600 hover:text-brand">
+                      Admin Panel
+                    </Link>
+                    <Link onClick={() => setIsMobileMenuOpen(false)} href="/admin/payments" className="text-sm font-medium text-slate-600 hover:text-brand">
+                      Admin Payouts
+                    </Link>
+                  </>
                 )}
                 <Link onClick={() => setIsMobileMenuOpen(false)} href="/dashboard" className="text-sm font-medium text-slate-600 hover:text-brand">
                   My Accounts
