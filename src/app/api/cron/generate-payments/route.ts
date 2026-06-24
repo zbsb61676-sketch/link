@@ -5,8 +5,8 @@ import nodemailer from "nodemailer";
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
@@ -70,10 +70,10 @@ export async function GET(request: Request) {
             }
           });
           
-          if (rental.listing.owner.email && process.env.SMTP_USER && process.env.SMTP_PASS) {
+          if (rental.listing.owner.email && process.env.EMAIL_USER && process.env.EMAIL_PASS) {
             try {
               await transporter.sendMail({
-                from: `"LinkRent Payouts" <${process.env.SMTP_USER}>`,
+                from: `"LinkRent Payouts" <${process.env.EMAIL_USER}>`,
                 to: rental.listing.owner.email,
                 subject: "Your LinkRent payout is ready!",
                 html: `<p>Great news! Your payout of <strong>₹${price}</strong> has been generated.</p><p>Log into your dashboard to request your payout.</p>`
@@ -110,10 +110,10 @@ export async function GET(request: Request) {
           }
         });
         
-        if (rental.listing.owner.email && process.env.SMTP_USER && process.env.SMTP_PASS) {
+        if (rental.listing.owner.email && process.env.EMAIL_USER && process.env.EMAIL_PASS) {
           try {
             await transporter.sendMail({
-              from: `"LinkRent Payouts" <${process.env.SMTP_USER}>`,
+              from: `"LinkRent Payouts" <${process.env.EMAIL_USER}>`,
               to: rental.listing.owner.email,
               subject: "Your LinkRent payout is ready!",
               html: `<p>Great news! Your payout of <strong>₹${price}</strong> has been generated.</p><p>Log into your dashboard to request your payout.</p>`
