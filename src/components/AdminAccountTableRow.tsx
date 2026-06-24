@@ -52,7 +52,18 @@ export default function AdminAccountTableRow({ account, onOpenPayment }: { accou
 
       <td className="p-4">
         <div className="flex flex-col text-sm">
-          <span className="text-slate-600">WA: {account.whatsappNumber || "N/A"}</span>
+          {account.whatsappNumber ? (
+            <a 
+              href={`https://wa.me/${account.whatsappNumber.replace(/[^0-9]/g, '')}`} 
+              target="_blank" 
+              rel="noreferrer" 
+              className="text-emerald-600 font-semibold hover:underline flex items-center gap-1"
+            >
+              WA: {account.whatsappNumber}
+            </a>
+          ) : (
+            <span className="text-slate-600">WA: N/A</span>
+          )}
           {account.linkedinUrl ? (
             <a href={account.linkedinUrl} target="_blank" rel="noreferrer" className="text-brand hover:underline truncate max-w-[150px] inline-block">
               Profile Link

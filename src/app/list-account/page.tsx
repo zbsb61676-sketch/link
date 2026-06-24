@@ -25,6 +25,7 @@ export default function ListAccountPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
+  const [showTerms, setShowTerms] = useState(true);
 
   useEffect(() => {
     setVerificationCode(`Verify-${Math.random().toString(36).substring(2, 8).toUpperCase()}`);
@@ -76,6 +77,31 @@ export default function ListAccountPage() {
     <div className="flex min-h-screen flex-col bg-slate-50">
       <Navbar />
       
+      {showTerms && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl p-8 max-w-lg w-full shadow-2xl relative border-t-4 border-amber-500">
+            <div className="flex items-center gap-3 mb-4 text-amber-600">
+              <AlertCircle size={28} />
+              <h2 className="text-2xl font-bold text-slate-900">Important Notice</h2>
+            </div>
+            <div className="space-y-4 text-slate-600 mb-8">
+              <p>Welcome to LinkRent! Before you proceed, please read our strict guidelines:</p>
+              <ul className="list-disc pl-5 space-y-3 font-medium text-slate-700 bg-amber-50 p-4 rounded-xl border border-amber-100">
+                <li><strong className="text-amber-900">No Bargaining:</strong> Our weekly payout rates are strictly fixed based on our network tier system. <span className="underline">We do not negotiate.</span> This is a business, not a flea market.</li>
+                <li><strong className="text-amber-900">Compliance:</strong> You must read and agree to all terms and conditions of renting your account.</li>
+                <li><strong className="text-amber-900">Honesty:</strong> Providing false information about your connection count or account age will result in an immediate permanent ban.</li>
+              </ul>
+            </div>
+            <button 
+              onClick={() => setShowTerms(false)}
+              className="w-full py-3 bg-brand text-white font-bold rounded-xl hover:bg-brand-hover transition-colors shadow-lg shadow-brand/20"
+            >
+              I Understand & Agree
+            </button>
+          </div>
+        </div>
+      )}
+
       <main className="flex-1 py-12">
         <div className="container mx-auto px-4 max-w-5xl">
           <div className="text-center mb-12">
