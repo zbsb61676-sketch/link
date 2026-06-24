@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CheckSquare, Square, DollarSign, Clock, ExternalLink, CheckCircle2, AlertTriangle } from "lucide-react";
+import { CheckSquare, Square, DollarSign, Clock, ExternalLink, CheckCircle2, AlertTriangle, QrCode, X } from "lucide-react";
 import toast from "react-hot-toast";
 
 interface Payment {
@@ -28,8 +28,23 @@ export default function AdminPaymentsTableClient({ initialPayments }: { initialP
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [filter, setFilter] = useState<string>("REQUESTED");
   const [loading, setLoading] = useState(false);
+  const [qrPayment, setQrPayment] = useState<Payment | null>(null);
+  const [upiIdInput, setUpiIdInput] = useState("");
 
   const filteredPayments = payments.filter(p => filter === "ALL" || p.status === filter);
+
+  // Helper to extract UPI ID from bank details string
+  const extractUpiId = (details: string | null) => {
+    if (!details) return "";
+    const words = details.split(/[\s,]+/);
+    const upi = words.find(w => w.includes('@'));
+    return upi || "";
+  };
+
+  const openQrModal = (payment: Payment) => {
+    setQrPayment(payment);
+    setUpiIdInput(extractUpiId(payment.user.bankDetails));
+  };
 
   const toggleSelectAll = () => {
     if (selectedIds.size === filteredPayments.length) {
@@ -135,6 +150,7 @@ export default function AdminPaymentsTableClient({ initialPayments }: { initialP
                 <th className="p-4 text-left text-sm font-semibold text-slate-600">Amount</th>
                 <th className="p-4 text-left text-sm font-semibold text-slate-600">Status</th>
                 <th className="p-4 text-left text-sm font-semibold text-slate-600">LinkedIn</th>
+                <th className="p-4 text-right text-sm font-semibold text-slate-600">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -210,6 +226,17 @@ export default function AdminPaymentsTableClient({ initialPayments }: { initialP
                         <span className="text-sm text-slate-400">N/A</span>
                       )}
                     </td>
+                    <td className="p-4 text-right">
+                      {(payment.status === "REQUESTED" || payment.status === "VERIFIED") && (
+                        <button 
+                          onClick={() => openQrModal(payment)}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-brand/10 text-brand rounded-lg hover:bg-brand/20 transition-colors text-sm font-bold"
+                        >
+                          <QrCode size={16} />
+                          Pay UPI
+                        </button>
+                      )}
+                    </td>
                   </tr>
                 ))
               )}
@@ -217,6 +244,76 @@ export default function AdminPaymentsTableClient({ initialPayments }: { initialP
           </table>
         </div>
       </div>
+
+      {/* QR Code Modal */}
+      {qrPayment && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div className="p-4 border-b flex justify-between items-center bg-slate-50">
+              <h3 className="font-bold text-lg text-slate-800 flex items-center gap-2">
+                <QrCode className="text-brand" /> Scan & Pay
+              </h3>
+              <button onClick={() => setQrPayment(null)} className="text-slate-400 hover:text-slate-600">
+                <X size={24} />
+              </button>
+            </div>
+            
+            <div className="p-6 flex flex-col items-center">
+              <div className="w-full mb-4">
+                <label className="block text-sm font-medium text-slate-700 mb-1">Verify/Edit UPI ID</label>
+                <input 
+                  type="text" 
+                  value={upiIdInput}
+                  onChange={(e) => setUpiIdInput(e.target.value)}
+                  placeholder="e.g. username@okicici"
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-brand focus:border-brand"
+                />
+              </div>
+
+              {upiIdInput.includes('@') ? (
+                <div className="bg-white p-4 rounded-xl border-2 border-slate-100 shadow-sm mb-4">
+                  <img 
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=${upiIdInput}&pn=${encodeURIComponent(qrPayment.user.name || 'User')}&am=${qrPayment.amount}&cu=INR`} 
+                    alt="UPI QR Code"
+                    className="w-48 h-48"
+                  />
+                </div>
+              ) : (
+                <div className="w-48 h-48 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 text-center p-4 mb-4 border-2 border-dashed border-slate-300">
+                  Enter a valid UPI ID (containing @) to generate QR
+                </div>
+              )}
+
+              <div className="text-center mb-6">
+                <p className="text-sm text-slate-500 mb-1">Paying <span className="font-semibold text-slate-800">{qrPayment.user.name}</span></p>
+                <div className="text-3xl font-black text-brand">₹{qrPayment.amount.toFixed(2)}</div>
+              </div>
+
+              <div className="flex gap-3 w-full">
+                <button 
+                  onClick={() => setQrPayment(null)}
+                  className="flex-1 px-4 py-3 border border-slate-300 text-slate-700 font-bold rounded-xl hover:bg-slate-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={async () => {
+                    const originalIds = new Set(selectedIds);
+                    setSelectedIds(new Set([qrPayment.id]));
+                    await updateStatus("COMPLETED");
+                    setSelectedIds(originalIds);
+                    setQrPayment(null);
+                  }}
+                  className="flex-1 px-4 py-3 bg-brand text-white font-bold rounded-xl hover:bg-brand-hover transition-colors flex items-center justify-center gap-2"
+                >
+                  <CheckCircle2 size={18} />
+                  Mark as Paid
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
