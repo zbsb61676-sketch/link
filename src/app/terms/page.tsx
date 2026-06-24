@@ -44,7 +44,7 @@ export default function TermsPage() {
             </ul>
 
             <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-2">5. Compensation and Payments</h2>
-            <p>Account Providers are compensated on a weekly basis, subject to account uptime and health. Payments are distributed every Friday. LinkRent reserves the right to withhold, pause, or cancel payments if:</p>
+            <p>Account Providers are compensated on a rolling schedule, subject to account uptime and health. The first payment is processed 24 hours after a rental begins, with subsequent payments processed every 7 days. LinkRent reserves the right to withhold, pause, or cancel payments if:</p>
             <ul className="list-disc pl-6 space-y-2">
               <li>The account is restricted or banned due to the Account Provider's manual actions outside of our system.</li>
               <li>The Account Provider fails to provide 2FA codes, resulting in significant downtime (exceeding 48 hours).</li>

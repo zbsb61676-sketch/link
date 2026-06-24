@@ -22,7 +22,7 @@ export default function FAQPage() {
     },
     {
       q: "How and when do I get paid?",
-      a: "Payments are issued weekly every Friday. You can choose to be paid via PayPal, Crypto, or direct bank transfer depending on your region. You can track all payments in your dashboard."
+      a: "Your first payment is processed 24 hours after your account rental begins. Subsequent payments are distributed every 7 days. You can request payouts directly from your dashboard."
     },
     {
       q: "What happens if LinkedIn asks for a verification code?",

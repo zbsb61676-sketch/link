@@ -25,7 +25,7 @@ interface Payment {
 export default function AdminPaymentsTableClient({ initialPayments }: { initialPayments: Payment[] }) {
   const [payments, setPayments] = useState<Payment[]>(initialPayments);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const [filter, setFilter] = useState<string>("ALL");
+  const [filter, setFilter] = useState<string>("REQUESTED");
   const [loading, setLoading] = useState(false);
 
   const filteredPayments = payments.filter(p => filter === "ALL" || p.status === filter);
@@ -84,7 +84,7 @@ export default function AdminPaymentsTableClient({ initialPayments }: { initialP
     <div>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div className="flex space-x-2 bg-slate-100 p-1 rounded-lg">
-          {["ALL", "PENDING", "VERIFIED", "COMPLETED"].map(status => (
+          {["ALL", "PENDING", "REQUESTED", "VERIFIED", "COMPLETED"].map(status => (
             <button
               key={status}
               onClick={() => setFilter(status)}
@@ -171,13 +171,27 @@ export default function AdminPaymentsTableClient({ initialPayments }: { initialP
                       <div className="text-xs text-slate-500">{new Date(payment.paymentDate).toLocaleDateString()}</div>
                     </td>
                     <td className="p-4">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                        ${payment.status === 'COMPLETED' ? 'bg-green-100 text-green-800' : 
-                          payment.status === 'VERIFIED' ? 'bg-amber-100 text-amber-800' :
-                          'bg-slate-100 text-slate-800'}`}
-                      >
-                        {payment.status}
-                      </span>
+                      {payment.status === "PENDING" ? (
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700">
+                          PENDING
+                        </span>
+                      ) : payment.status === "REQUESTED" ? (
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700">
+                          REQUESTED
+                        </span>
+                      ) : payment.status === "VERIFIED" ? (
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-purple-100 text-purple-700">
+                          VERIFIED
+                        </span>
+                      ) : payment.status === "CANCELLED" ? (
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700">
+                          CANCELLED
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">
+                          PAID
+                        </span>
+                      )}
                     </td>
                     <td className="p-4">
                       {payment.rental?.listing?.linkedinUrl ? (

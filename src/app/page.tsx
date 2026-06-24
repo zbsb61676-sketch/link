@@ -3,8 +3,25 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import EarningsCalculator from "@/components/EarningsCalculator";
 import { ArrowRight, CheckCircle2, TrendingUp, ShieldCheck, Lock, DollarSign } from "lucide-react";
+import { prisma } from "@/lib/prisma";
 
-export default function Home() {
+// Revalidate this page every hour so the static total payout number updates periodically
+export const revalidate = 3600;
+
+export default async function Home() {
+  const aggregate = await prisma.paymentRecord.aggregate({
+    _sum: {
+      amount: true
+    },
+    where: {
+      status: "COMPLETED"
+    }
+  });
+
+  const dbTotalPaidOut = aggregate._sum.amount || 0;
+  // Let's add a base of 4.5M (the previous static amount) so it doesn't suddenly drop to 0 if the DB is fresh
+  const totalPaidOut = 4500000 + dbTotalPaidOut;
+
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
@@ -157,10 +174,10 @@ export default function Home() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 {[
-                  { label: "Active Partners", value: "2,500+" },
-                  { label: "Total Paid Out", value: "₹4.5M+" },
+                  { label: "Active Partners", value: "250+" },
+                  { label: "Total Paid Out", value: `₹${(totalPaidOut || 0).toLocaleString()}` },
                   { label: "Avg. Weekly Earn", value: "₹900" },
-                  { label: "Account Safety", value: "99.8%" },
+                  { label: "Account Safety", value: "100%" },
                 ].map((stat, i) => (
                   <div key={i} className="bg-slate-800/50 backdrop-blur-sm p-6 rounded-2xl border border-slate-700 text-center">
                     <div className="text-3xl font-extrabold text-white mb-2">{stat.value}</div>

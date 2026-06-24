@@ -39,7 +39,7 @@ export default function EarningsPage() {
               </div>
               <h2 className="text-2xl font-bold text-slate-900 mb-2">Weekly Payouts</h2>
               <p className="text-slate-600">
-                We process payments every Friday via PayPal or Bank Transfer. You can track all your past and upcoming payments directly from your dashboard.
+                We process your first payment 24 hours after your rental begins, and subsequent payments every 7 days. You can request payouts directly from your dashboard.
               </p>
             </div>
           </div>

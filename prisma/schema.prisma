@@ -89,7 +89,7 @@ model PaymentRecord {
   paymentDate   DateTime  @default(now())
   reference     String?
   
-  status        String    @default("PENDING") // PENDING, VERIFIED, COMPLETED, CANCELLED
+  status        String    @default("PENDING") // PENDING, REQUESTED, VERIFIED, COMPLETED, CANCELLED
   releaseDate   DateTime?
 
   createdAt     DateTime  @default(now())
