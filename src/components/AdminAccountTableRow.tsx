@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ShieldCheck, DollarSign, MessageCircle } from "lucide-react";
+import { ShieldCheck, DollarSign, MessageCircle, PlusCircle } from "lucide-react";
 
 export default function AdminAccountTableRow({ account }: { account: any }) {
   const router = useRouter();
@@ -23,6 +23,36 @@ export default function AdminAccountTableRow({ account }: { account: any }) {
       }
     } catch (error) {
       alert("Error updating status");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const creditUser = async () => {
+    const rawAmount = prompt(`Enter amount in ₹ to manually credit ${account.owner.name} for this rental:`, account.price.toString());
+    if (!rawAmount) return;
+    
+    const amount = Number(rawAmount);
+    if (isNaN(amount) || amount <= 0) {
+      alert("Please enter a valid positive number.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/admin/listings/${account.id}/credit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount }),
+      });
+      if (res.ok) {
+        alert(`Successfully credited ₹${amount} to ${account.owner.name}! It is now AVAILABLE in their dashboard.`);
+        router.refresh();
+      } else {
+        alert("Failed to credit user");
+      }
+    } catch (error) {
+      alert("Error crediting user");
     } finally {
       setLoading(false);
     }
@@ -122,6 +152,14 @@ export default function AdminAccountTableRow({ account }: { account: any }) {
             </>
           ) : account.status === 'RENTED' ? (
             <>
+              <button 
+                onClick={creditUser}
+                disabled={loading}
+                className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white text-xs font-medium rounded hover:bg-amber-600 transition-colors disabled:opacity-50"
+                title="Manually credit this user's account"
+              >
+                <PlusCircle size={14} /> Credit
+              </button>
               <button 
                 onClick={() => updateStatus('AVAILABLE')}
                 disabled={loading}
