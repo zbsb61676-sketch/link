@@ -93,6 +93,18 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing content or image" }, { status: 400 });
     }
 
+    let sanitizedContent = data.content || "";
+    sanitizedContent = sanitizedContent.replace(/<[^>]*>?/gm, ''); // Strip all HTML tags
+    
+    if (data.imageUrl) {
+      if (!data.imageUrl.startsWith("data:image/") && !data.imageUrl.startsWith("http")) {
+         return NextResponse.json({ error: "Invalid image format" }, { status: 400 });
+      }
+      if (data.imageUrl.length > 500000) { // Limit to ~500KB
+         return NextResponse.json({ error: "Image too large" }, { status: 400 });
+      }
+    }
+
     if (role !== "ADMIN") {
       const targetUser = await prisma.user.findUnique({ where: { id: receiverId } });
       if (!targetUser || targetUser.role !== "ADMIN") {
@@ -104,7 +116,7 @@ export async function POST(req: Request) {
       data: {
         senderId: currentUserId,
         receiverId: receiverId,
-        content: data.content || "",
+        content: sanitizedContent,
         imageUrl: data.imageUrl || null,
       }
     });

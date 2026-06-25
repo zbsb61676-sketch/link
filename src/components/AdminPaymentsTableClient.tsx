@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { CheckSquare, Square, DollarSign, Clock, ExternalLink, CheckCircle2, AlertTriangle, QrCode, X } from "lucide-react";
 import toast from "react-hot-toast";
+import { QRCodeSVG } from "qrcode.react";
 
 interface Payment {
   id: string;
@@ -271,11 +272,11 @@ export default function AdminPaymentsTableClient({ initialPayments }: { initialP
               </div>
 
               {upiIdInput.includes('@') ? (
-                <div className="bg-white p-4 rounded-xl border-2 border-slate-100 shadow-sm mb-4">
-                  <img 
-                    src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=${upiIdInput}&pn=${encodeURIComponent(qrPayment.user.name || 'User')}&am=${qrPayment.amount}&cu=INR`} 
-                    alt="UPI QR Code"
-                    className="w-48 h-48"
+                <div className="bg-white p-4 rounded-xl border-2 border-slate-100 shadow-sm mb-4 flex justify-center">
+                  <QRCodeSVG 
+                    value={`upi://pay?pa=${upiIdInput}&pn=${encodeURIComponent(qrPayment.user.name || 'User')}&am=${qrPayment.amount}&cu=INR`}
+                    size={192}
+                    level="Q"
                   />
                 </div>
               ) : (

@@ -32,6 +32,14 @@ export async function POST(request: Request) {
         paypalEmail: paypalEmail || null,
         bankDetails: bankDetails || null,
       },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        paypalEmail: true,
+        bankDetails: true,
+        role: true
+      }
     });
 
     return NextResponse.json({ user: updatedUser });

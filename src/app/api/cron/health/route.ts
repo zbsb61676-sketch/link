@@ -9,7 +9,7 @@ export async function GET(req: Request) {
     const authHeader = req.headers.get("authorization");
     const cronSecret = process.env.CRON_SECRET;
     
-    if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+    if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -32,17 +32,23 @@ export async function GET(req: Request) {
       let healthStatus = "HEALTHY";
       
       try {
-        const res = await fetch(rental.listing.linkedinUrl, { 
-          method: 'GET',
-          headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-          }
-        });
-
-        // 404 (Not Found) or 999 (LinkedIn Bot Protection) -> Flag for review
-        if (res.status === 404 || res.status === 999) {
+        const url = rental.listing.linkedinUrl;
+        if (!url.startsWith('https://www.linkedin.com/') && !url.startsWith('https://linkedin.com/')) {
           healthStatus = "NEEDS_REVIEW";
           needsReviewCount++;
+        } else {
+          const res = await fetch(url, { 
+            method: 'GET',
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            }
+          });
+
+          // 404 (Not Found) or 999 (LinkedIn Bot Protection) -> Flag for review
+          if (res.status === 404 || res.status === 999) {
+            healthStatus = "NEEDS_REVIEW";
+            needsReviewCount++;
+          }
         }
       } catch (err) {
         console.error(`Failed to fetch URL ${rental.listing.linkedinUrl}:`, err);

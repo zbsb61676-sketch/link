@@ -50,18 +50,27 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
+    // Verify the reporter is associated with the rental (IDOR fix)
+    const rental = await prisma.rental.findUnique({
+      where: { id: rentalId },
+      include: { listing: true }
+    });
+
+    if (!rental) {
+      return NextResponse.json({ error: "Rental not found" }, { status: 404 });
+    }
+
+    const currentUserId = (session.user as any).id;
+    if (rental.renterId !== currentUserId && rental.listing.ownerId !== currentUserId) {
+      return NextResponse.json({ error: "You are not authorized to dispute this rental" }, { status: 403 });
+    }
+
     const dispute = await prisma.dispute.create({
       data: {
         rentalId,
         reason,
-        reporterId: (session.user as any).id,
+        reporterId: currentUserId,
       },
-    });
-
-    // Automatically pause the listing to prevent further fraud
-    const rental = await prisma.rental.findUnique({
-      where: { id: rentalId },
-      select: { listingId: true }
     });
 
     if (rental) {

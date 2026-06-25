@@ -95,23 +95,38 @@ export async function sendAccountStatusUpdateEmail(to: string, name: string, sta
   });
 }
 
+function escapeHtml(unsafe: string) {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 export async function sendAdminNewListingEmail(listingDetails: { name: string, email: string, connections: number, linkedinUrl: string }) {
   const adminEmail = process.env.EMAIL_USER as string; // Send to ourselves
   
+  const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+  
+  const safeName = escapeHtml(listingDetails.name);
+  const safeEmail = escapeHtml(listingDetails.email);
+  const safeUrl = escapeHtml(listingDetails.linkedinUrl);
+
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px;">
       <h2 style="color: #0f172a;">🔔 New LinkedIn Account Listed!</h2>
       <p style="color: #334155; font-size: 16px;">
-        <strong>${listingDetails.name}</strong> (${listingDetails.email}) just listed a new LinkedIn account for rent.
+        <strong>${safeName}</strong> (${safeEmail}) just listed a new LinkedIn account for rent.
       </p>
       
       <div style="background-color: #f8fafc; padding: 15px; border-radius: 6px; margin: 20px 0;">
         <p style="margin: 5px 0;"><strong>Connections:</strong> ${listingDetails.connections}</p>
-        <p style="margin: 5px 0;"><strong>LinkedIn URL:</strong> <a href="${listingDetails.linkedinUrl}">${listingDetails.linkedinUrl}</a></p>
+        <p style="margin: 5px 0;"><strong>LinkedIn URL:</strong> <a href="${safeUrl}">${safeUrl}</a></p>
       </div>
 
       <div style="text-align: center; margin: 30px 0;">
-        <a href="https://link-iota-nine.vercel.app/admin/accounts" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px;">
+        <a href="${baseUrl}/admin/accounts" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px;">
           Review Account in Admin Panel
         </a>
       </div>

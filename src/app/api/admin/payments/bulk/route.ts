@@ -17,6 +17,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
     }
 
+    const validStatuses = ["PENDING", "REQUESTED", "VERIFIED", "COMPLETED", "CANCELLED"];
+    if (!validStatuses.includes(status)) {
+      return NextResponse.json({ error: "Invalid status value" }, { status: 400 });
+    }
+
     const updatedPayments = await prisma.paymentRecord.updateMany({
       where: {
         id: { in: paymentIds }

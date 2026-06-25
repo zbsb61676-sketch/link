@@ -39,7 +39,7 @@ export async function POST(req: Request) {
       },
     });
 
-    const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    const token = crypto.randomUUID();
     
     await prisma.verificationToken.create({
       data: {
@@ -60,11 +60,9 @@ export async function POST(req: Request) {
     console.error("====================================================");
     
     const errorMessage = error?.message || error?.toString() || "Unknown error occurred";
-    const errorStack = error?.stack || "";
     
     return NextResponse.json({ 
-      error: `Server Error: ${errorMessage}`,
-      details: errorStack
+      error: `Registration failed: ${errorMessage}`
     }, { status: 500 });
   }
 }

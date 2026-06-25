@@ -17,26 +17,22 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Payment ID is required" }, { status: 400 });
     }
 
-    // Verify the payment belongs to the user and is in PENDING state
-    const payment = await prisma.paymentRecord.findUnique({
-      where: { id: paymentId }
-    });
-
-    if (!payment || payment.userId !== (session.user as any).id) {
-      return NextResponse.json({ error: "Payment not found or unauthorized" }, { status: 404 });
-    }
-
-    if (payment.status !== "PENDING") {
-      return NextResponse.json({ error: "Only PENDING payments can be requested" }, { status: 400 });
-    }
-
-    // Update the status to REQUESTED
-    const updatedPayment = await prisma.paymentRecord.update({
-      where: { id: paymentId },
+    // Atomically update the status to REQUESTED only if it is currently PENDING
+    // This prevents race conditions where double-clicks could send multiple requests
+    const updateResult = await prisma.paymentRecord.updateMany({
+      where: { 
+        id: paymentId,
+        userId: (session.user as any).id,
+        status: "PENDING"
+      },
       data: { status: "REQUESTED" }
     });
 
-    return NextResponse.json({ success: true, payment: updatedPayment });
+    if (updateResult.count === 0) {
+      return NextResponse.json({ error: "Payment not found, unauthorized, or not in PENDING state" }, { status: 400 });
+    }
+
+    return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error requesting payout:", error);
     return NextResponse.json(
