@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { sendPaymentCompletedEmail } from "@/lib/email";
 
 export async function POST(request: Request) {
   try {
@@ -30,6 +31,18 @@ export async function POST(request: Request) {
         status: status
       }
     });
+
+    if (status === "COMPLETED") {
+      const payments = await prisma.paymentRecord.findMany({
+        where: { id: { in: paymentIds } },
+        include: { user: true }
+      });
+      for (const p of payments) {
+        if (p.user && p.user.email) {
+          await sendPaymentCompletedEmail(p.user.email, p.user.name || "User", p.amount);
+        }
+      }
+    }
 
     return NextResponse.json({ 
       success: true, 

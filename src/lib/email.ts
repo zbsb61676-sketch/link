@@ -139,3 +139,61 @@ export async function sendAdminNewListingEmail(listingDetails: { name: string, e
     html,
   });
 }
+
+export async function sendPaymentRequestedEmail(to: string, name: string, amount: number) {
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px;">
+      <h2 style="color: #0f172a;">Your Payout is Processing! 💸</h2>
+      <p style="color: #334155; font-size: 16px;">
+        Hi ${escapeHtml(name)},
+      </p>
+      <p style="color: #334155; font-size: 16px;">
+        Great news! A new payout of <strong>₹${amount.toFixed(2)}</strong> has been generated for your rented LinkedIn account. 
+        It is currently in our system as <em>REQUESTED</em> and is awaiting administrative verification.
+      </p>
+      <p style="color: #334155; font-size: 16px;">
+        We typically verify and process payments within a few business days. We will notify you again once the funds have been sent to your chosen payout method!
+      </p>
+      <br/>
+      <p style="color: #64748b; font-size: 14px;">
+        Thanks,<br/>
+        The LinkRent Team
+      </p>
+    </div>
+  `;
+
+  await sendEmail({
+    to,
+    subject: `Your ₹${amount.toFixed(2)} Payout is Processing!`,
+    html,
+  });
+}
+
+export async function sendPaymentCompletedEmail(to: string, name: string, amount: number) {
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px;">
+      <h2 style="color: #0f172a;">You've Been Paid! 💰</h2>
+      <p style="color: #334155; font-size: 16px;">
+        Hi ${escapeHtml(name)},
+      </p>
+      <p style="color: #334155; font-size: 16px;">
+        Cha-ching! We have successfully processed your payout of <strong>₹${amount.toFixed(2)}</strong>. 
+        The funds have been sent to your registered payout method (UPI, PayPal, or Bank Transfer).
+      </p>
+      <p style="color: #334155; font-size: 16px;">
+        Depending on your bank or payment provider, it may take a little time for the funds to reflect in your account balance.
+      </p>
+      <br/>
+      <p style="color: #64748b; font-size: 14px;">
+        Thanks for being a great partner,<br/>
+        The LinkRent Team
+      </p>
+    </div>
+  `;
+
+  await sendEmail({
+    to,
+    subject: `Payment Sent: ₹${amount.toFixed(2)}`,
+    html,
+  });
+}
