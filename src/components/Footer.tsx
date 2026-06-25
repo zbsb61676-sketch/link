@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MessageCircle, Globe } from "lucide-react";
+import { Briefcase, MessageCircle, Globe } from "lucide-react";
 import Logo from "./Logo";
 
 export default function Footer() {
