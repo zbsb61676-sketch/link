@@ -52,6 +52,10 @@ export default function SignupPage() {
               <h3 className="text-xl font-bold text-slate-900 mb-2">Check your inbox</h3>
               <p className="text-slate-600 mb-6">
                 We've sent a verification link to <strong>{formData.email}</strong>. Please click the link to activate your account.
+                <br/><br/>
+                <span className="text-amber-600 font-medium text-sm block bg-amber-50 p-3 rounded border border-amber-200">
+                  Note: If you don't see the email within a minute, please check your <strong>Spam</strong> or <strong>Junk</strong> folder.
+                </span>
               </p>
               <Link href="/login" className="text-brand hover:underline font-medium">
                 Return to Login
