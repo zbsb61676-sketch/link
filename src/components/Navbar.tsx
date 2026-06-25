@@ -44,6 +44,9 @@ export default function Navbar() {
               <Link href="/list-account" className="text-sm font-medium text-slate-600 hover:text-brand transition-colors">
                 List Your Account
               </Link>
+              <Link href="/settings" className="text-sm font-medium text-slate-600 hover:text-brand transition-colors">
+                Settings
+              </Link>
               <Link href="/how-it-works" className="text-sm font-medium text-slate-600 hover:text-brand transition-colors">
                 How It Works
               </Link>
@@ -62,12 +65,12 @@ export default function Navbar() {
             <div className="w-20 h-8 bg-slate-200 animate-pulse rounded-md"></div>
           ) : session ? (
             <div className="flex items-center gap-4">
-              <Link href="/settings" className="flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-brand transition-colors">
+              <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
                 <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center">
                   <User size={16} className="text-slate-500" />
                 </div>
                 <span>{session.user?.name}</span>
-              </Link>
+              </div>
               <button 
                 onClick={() => signOut()}
                 className="p-2 text-slate-400 hover:text-red-500 transition-colors"

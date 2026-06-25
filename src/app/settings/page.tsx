@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { CreditCard, Landmark, Save, Loader2, AlertCircle } from "lucide-react";
+import { CreditCard, Landmark, Save, Loader2, AlertCircle, Shield } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -135,6 +135,25 @@ export default function SettingsPage() {
                   />
                   <p className="text-xs text-slate-500 mt-1">Provide necessary banking details securely.</p>
                 </div>
+              </div>
+            </div>
+
+            <div className="pt-6 border-t border-slate-100">
+              <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <Shield className="text-green-500" size={20} /> Account Security & Handover
+              </h2>
+              
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-4">
+                <p className="text-sm text-slate-700">
+                  To securely rent your account to our vetted B2B agency, you will need to provide your LinkedIn login credentials. Please follow these strict security guidelines:
+                </p>
+                
+                <ul className="list-disc pl-5 space-y-2 text-sm text-slate-600">
+                  <li><strong className="text-slate-800">Change Your Password First:</strong> Before handing over your account, change your LinkedIn password to a temporary, unique password (e.g., <code className="bg-slate-200 px-1 py-0.5 rounded text-slate-800">LinkRentTemp2024!</code>). <strong>Never</strong> share a password that you use for your personal banking or email.</li>
+                  <li><strong className="text-slate-800">Enable 2FA (Two-Factor Authentication):</strong> Keep 2FA enabled on your LinkedIn account. When our agency logs in for the first time, we will contact you via WhatsApp to get the 2FA code.</li>
+                  <li><strong className="text-slate-800">Secure Communication:</strong> Only share your temporary password with our official support team via the encrypted Messages portal on this dashboard. Do not send it over unencrypted email or text message.</li>
+                  <li><strong className="text-slate-800">You Are In Control:</strong> You can terminate the rental agreement at any time simply by changing your LinkedIn password. This immediately revokes our agency's access.</li>
+                </ul>
               </div>
             </div>
 
