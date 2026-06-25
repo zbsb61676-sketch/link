@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Briefcase, MessageCircle, Globe } from "lucide-react";
+import { MessageCircle, Globe } from "lucide-react";
+import Logo from "./Logo";
 
 export default function Footer() {
   return (
@@ -8,7 +9,7 @@ export default function Footer() {
         <div className="col-span-1 md:col-span-1">
           <Link href="/" className="flex items-center gap-2 mb-4 group">
             <div className="bg-brand text-white p-1 rounded-lg">
-              <Briefcase size={20} />
+              <Logo size={20} />
             </div>
             <span className="font-bold text-xl text-white">LinkRent</span>
           </Link>

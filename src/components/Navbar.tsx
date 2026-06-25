@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { Shield, Briefcase, Menu, LogOut, User } from "lucide-react";
+import { Shield, Menu, LogOut, User } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 import { useState } from "react";
+import Logo from "./Logo";
 
 export default function Navbar() {
   const { data: session, status } = useSession();
@@ -14,7 +15,7 @@ export default function Navbar() {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 group">
           <div className="bg-brand text-white p-1.5 rounded-lg group-hover:bg-brand-hover transition-colors">
-            <Briefcase size={24} />
+            <Logo size={24} />
           </div>
           <span className="font-bold text-xl tracking-tight text-slate-900">LinkRent</span>
         </Link>
