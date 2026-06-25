@@ -33,15 +33,23 @@ export async function POST(
 
     const activeRental = listing.rentals[0];
 
-    // Create the payment record
-    const payment = await prisma.paymentRecord.create({
-      data: {
-        userId: listing.ownerId,
-        rentalId: activeRental?.id, // Optional, can be null if they want to credit an available account
-        amount: amount,
-        status: "PENDING",
-      }
-    });
+    // Create the payment record and update the rental
+    const [payment] = await prisma.$transaction([
+      prisma.paymentRecord.create({
+        data: {
+          userId: listing.ownerId,
+          rentalId: activeRental?.id, 
+          amount: amount,
+          status: "PENDING",
+        }
+      }),
+      ...(activeRental ? [
+        prisma.rental.update({
+          where: { id: activeRental.id },
+          data: { lastPaymentDate: new Date() }
+        })
+      ] : [])
+    ]);
 
     return NextResponse.json({ success: true, payment });
   } catch (error) {

@@ -18,7 +18,10 @@ export default async function AdminAccountsPage() {
   }
 
   const listings = await prisma.accountListing.findMany({
-    include: { owner: { select: { name: true, email: true } } },
+    include: { 
+      owner: { select: { name: true, email: true } },
+      rentals: { where: { status: 'ACTIVE' } }
+    },
     orderBy: { createdAt: "desc" },
   });
 

@@ -8,6 +8,21 @@ export default function AdminAccountTableRow({ account }: { account: any }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
+  // Check if button should be enabled
+  const activeRental = account.rentals?.[0];
+  let isCreditDisabled = false;
+  let creditTooltip = "Manually credit this user's account";
+  
+  if (activeRental) {
+    const referenceDate = activeRental.lastPaymentDate ? new Date(activeRental.lastPaymentDate) : new Date(activeRental.startDate);
+    const daysSince = Math.floor((Date.now() - referenceDate.getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (daysSince < 7) {
+      isCreditDisabled = true;
+      creditTooltip = `Wait ${7 - daysSince} more days to credit this user (Next payout due every 7 days)`;
+    }
+  }
+
   const updateStatus = async (status: string) => {
     setLoading(true);
     try {
@@ -154,9 +169,9 @@ export default function AdminAccountTableRow({ account }: { account: any }) {
             <>
               <button 
                 onClick={creditUser}
-                disabled={loading}
-                className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white text-xs font-medium rounded hover:bg-amber-600 transition-colors disabled:opacity-50"
-                title="Manually credit this user's account"
+                disabled={loading || isCreditDisabled}
+                className={`flex items-center gap-1 px-3 py-1.5 text-white text-xs font-medium rounded transition-colors disabled:opacity-50 ${isCreditDisabled ? 'bg-slate-400 cursor-not-allowed' : 'bg-amber-500 hover:bg-amber-600'}`}
+                title={creditTooltip}
               >
                 <PlusCircle size={14} /> Credit
               </button>
