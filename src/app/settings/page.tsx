@@ -14,8 +14,9 @@ import toast from "react-hot-toast";
 const settingsSchema = z.object({
   paypalEmail: z.string().email("Invalid email address").optional().or(z.literal("")),
   bankDetails: z.string().optional(),
-}).refine(data => data.paypalEmail || data.bankDetails, {
-  message: "Please provide either a PayPal Email or Bank Details",
+  upiId: z.string().optional(),
+}).refine(data => data.paypalEmail || data.bankDetails || data.upiId, {
+  message: "Please provide either a PayPal Email, Bank Details, or UPI ID",
   path: ["paypalEmail"]
 });
 
@@ -36,6 +37,7 @@ export default function SettingsPage() {
     defaultValues: {
       paypalEmail: "",
       bankDetails: "",
+      upiId: "",
     },
   });
 
@@ -51,6 +53,7 @@ export default function SettingsPage() {
             const data = await res.json();
             setValue("paypalEmail", data.paypalEmail || "");
             setValue("bankDetails", data.bankDetails || "");
+            setValue("upiId", data.upiId || "");
           }
         } catch(e) {
           console.error("Could not load existing settings");
@@ -134,6 +137,26 @@ export default function SettingsPage() {
                     {...register("bankDetails")}
                   />
                   <p className="text-xs text-slate-500 mt-1">Provide necessary banking details securely.</p>
+                </div>
+
+                <div className="relative py-4 flex items-center">
+                  <div className="flex-grow border-t border-slate-200"></div>
+                  <span className="flex-shrink-0 mx-4 text-slate-400 text-sm">OR</span>
+                  <div className="flex-grow border-t border-slate-200"></div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
+                    <CreditCard size={16} /> UPI ID (India Only)
+                  </label>
+                  <input 
+                    type="text" 
+                    placeholder="e.g. username@okicici" 
+                    className={`w-full px-4 py-2 border ${errors.upiId ? 'border-red-500 focus:ring-red-500' : 'border-slate-300 focus:ring-brand'} rounded-lg focus:ring-2 outline-none text-slate-900 bg-white`} 
+                    {...register("upiId")}
+                  />
+                  {errors.upiId && <p className="mt-1 text-sm text-red-500 flex items-center gap-1"><AlertCircle size={14}/>{errors.upiId.message}</p>}
+                  <p className="text-xs text-slate-500 mt-1">Directly receive payments to your UPI account.</p>
                 </div>
               </div>
             </div>

@@ -7,6 +7,7 @@ import * as z from "zod";
 const settingsSchema = z.object({
   paypalEmail: z.string().email().optional().or(z.literal("")),
   bankDetails: z.string().optional(),
+  upiId: z.string().optional(),
 });
 
 export async function GET(request: Request) {
@@ -22,6 +23,7 @@ export async function GET(request: Request) {
       select: {
         paypalEmail: true,
         bankDetails: true,
+        upiId: true,
       }
     });
 
@@ -47,13 +49,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid data format" }, { status: 400 });
     }
     
-    const { paypalEmail, bankDetails } = result.data;
+    const { paypalEmail, bankDetails, upiId } = result.data;
 
     const updatedUser = await prisma.user.update({
       where: { id: (session.user as any).id },
       data: {
         paypalEmail: paypalEmail || null,
         bankDetails: bankDetails || null,
+        upiId: upiId || null,
       },
       select: {
         id: true,
@@ -61,6 +64,7 @@ export async function POST(request: Request) {
         email: true,
         paypalEmail: true,
         bankDetails: true,
+        upiId: true,
         role: true
       }
     });

@@ -24,6 +24,7 @@ export default async function AdminPaymentsPage() {
           email: true,
           paypalEmail: true,
           bankDetails: true,
+          upiId: true,
         }
       },
       rental: {

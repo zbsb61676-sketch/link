@@ -15,6 +15,7 @@ interface Payment {
     email: string | null;
     paypalEmail: string | null;
     bankDetails: string | null;
+    upiId: string | null;
   };
   rental: {
     lastHealthStatus: string;
@@ -44,7 +45,7 @@ export default function AdminPaymentsTableClient({ initialPayments }: { initialP
 
   const openQrModal = (payment: Payment) => {
     setQrPayment(payment);
-    setUpiIdInput(extractUpiId(payment.user.bankDetails));
+    setUpiIdInput(payment.user.upiId || extractUpiId(payment.user.bankDetails));
   };
 
   const toggleSelectAll = () => {
@@ -178,7 +179,9 @@ export default function AdminPaymentsTableClient({ initialPayments }: { initialP
                       <div className="text-sm text-slate-500">{payment.user.email}</div>
                     </td>
                     <td className="p-4">
-                      {payment.user.paypalEmail ? (
+                      {payment.user.upiId ? (
+                        <div className="text-sm"><span className="font-semibold text-slate-700">UPI:</span> {payment.user.upiId}</div>
+                      ) : payment.user.paypalEmail ? (
                         <div className="text-sm"><span className="font-semibold text-slate-700">PayPal:</span> {payment.user.paypalEmail}</div>
                       ) : (
                         <div className="text-sm truncate max-w-[200px]"><span className="font-semibold text-slate-700">Bank:</span> {payment.user.bankDetails || "Not Set"}</div>
