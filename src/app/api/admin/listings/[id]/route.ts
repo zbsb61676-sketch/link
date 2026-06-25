@@ -22,10 +22,38 @@ export async function PATCH(
       return NextResponse.json({ error: "Invalid status" }, { status: 400 });
     }
 
-    const updatedListing = await prisma.accountListing.update({
-      where: { id },
-      data: { status },
-      include: { owner: { select: { name: true, email: true } } },
+    const updatedListing = await prisma.$transaction(async (tx) => {
+      const listing = await tx.accountListing.update({
+        where: { id },
+        data: { status },
+        include: { owner: { select: { name: true, email: true } } },
+      });
+
+      if (status === "RENTED") {
+        // Check if there's already an active rental
+        const existingRental = await tx.rental.findFirst({
+          where: { listingId: id, status: "ACTIVE" }
+        });
+        
+        if (!existingRental) {
+          await tx.rental.create({
+            data: {
+              listingId: id,
+              renterId: (session.user as any).id, // Admin is the renter in this platform model
+              status: "ACTIVE",
+              startDate: new Date(),
+            }
+          });
+        }
+      } else {
+        // If changing away from RENTED (e.g. AVAILABLE, REJECTED), close active rentals
+        await tx.rental.updateMany({
+          where: { listingId: id, status: "ACTIVE" },
+          data: { status: "COMPLETED", endDate: new Date() }
+        });
+      }
+
+      return listing;
     });
     
     // Fire off the email notification asynchronously
