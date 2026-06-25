@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "LinkRent - Passive Income from your LinkedIn Account",
   description: "Securely rent your established LinkedIn account to our vetted B2B agency and earn consistent monthly passive income.",
   other: {
-    "google-adsense-account": "ca-pub-7010170331010948"
+    "google-adsense-account": process.env.NEXT_PUBLIC_ADSENSE_ID || ""
   }
 };
 
@@ -30,15 +30,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const adSenseId = process.env.NEXT_PUBLIC_ADSENSE_ID;
+
   return (
     <html lang="en" className={`${inter.variable} ${geistMono.variable}`}>
       <head>
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7010170331010948"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        {adSenseId && (
+          <Script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adSenseId}`}
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        )}
       </head>
       <body className="min-h-full flex flex-col bg-slate-50 text-slate-900 font-sans antialiased">
         <AuthProvider>

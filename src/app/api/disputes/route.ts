@@ -15,12 +15,16 @@ export async function GET(req: Request) {
 
     const disputes = await prisma.dispute.findMany({
       include: {
-        reporter: true,
+        reporter: {
+          select: { id: true, name: true, email: true }
+        },
         rental: {
           include: {
             listing: {
               include: {
-                owner: true,
+                owner: {
+                  select: { id: true, name: true, email: true }
+                }
               }
             }
           }

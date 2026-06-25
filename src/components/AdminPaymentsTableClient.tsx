@@ -157,7 +157,7 @@ export default function AdminPaymentsTableClient({ initialPayments }: { initialP
             <tbody className="divide-y divide-slate-100">
               {filteredPayments.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-slate-500">
+                  <td colSpan={7} className="p-8 text-center text-slate-500">
                     No payments found.
                   </td>
                 </tr>

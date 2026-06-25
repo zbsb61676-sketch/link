@@ -60,9 +60,9 @@ model AccountListing {
 model Rental {
   id            String    @id @default(cuid())
   listingId     String
-  listing       AccountListing @relation(fields: [listingId], references: [id])
+  listing       AccountListing @relation(fields: [listingId], references: [id], onDelete: Cascade)
   renterId      String
-  renter        User      @relation(fields: [renterId], references: [id])
+  renter        User      @relation(fields: [renterId], references: [id], onDelete: Cascade)
   startDate     DateTime  @default(now())
   endDate       DateTime?
   status        String    @default("ACTIVE") // ACTIVE, CANCELLED, COMPLETED
@@ -76,6 +76,10 @@ model Rental {
   
   disputes      Dispute[]
   payments      PaymentRecord[]
+
+  @@index([status])
+  @@index([listingId])
+  @@index([renterId])
 }
 
 model PaymentRecord {
@@ -95,19 +99,25 @@ model PaymentRecord {
 
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([rentalId])
 }
 
 model Dispute {
   id          String   @id @default(cuid())
   rentalId    String
-  rental      Rental   @relation(fields: [rentalId], references: [id])
+  rental      Rental   @relation(fields: [rentalId], references: [id], onDelete: Cascade)
   reporterId  String
-  reporter    User     @relation(fields: [reporterId], references: [id])
+  reporter    User     @relation(fields: [reporterId], references: [id], onDelete: Cascade)
   reason      String
   status      String   @default("OPEN") // OPEN, RESOLVED
   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([rentalId])
+  @@index([reporterId])
 }
 
 model Message {
@@ -123,6 +133,10 @@ model Message {
   receiver    User     @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
 
   createdAt   DateTime @default(now())
+
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([read])
 }
 
 model VerificationToken {

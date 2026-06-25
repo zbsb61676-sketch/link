@@ -56,7 +56,7 @@ export default function SettingsPage() {
           console.error("Could not load existing settings");
         }
       }
-      // fetchSettings();
+      fetchSettings();
     }
   }, [status, session, router, setValue]);
 

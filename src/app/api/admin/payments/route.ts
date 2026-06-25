@@ -13,8 +13,13 @@ export async function POST(request: Request) {
 
     const { userId, amount, reference } = await request.json();
 
-    if (!userId || !amount) {
+    if (!userId || amount === undefined || amount === null) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    const parsedAmount = parseFloat(amount);
+    if (isNaN(parsedAmount) || !isFinite(parsedAmount) || parsedAmount <= 0) {
+      return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
     }
 
     const releaseDate = new Date();
@@ -23,7 +28,7 @@ export async function POST(request: Request) {
     const payment = await prisma.paymentRecord.create({
       data: {
         userId,
-        amount: parseFloat(amount),
+        amount: parsedAmount,
         reference: reference || null,
         status: "PENDING",
         releaseDate: releaseDate,

@@ -9,6 +9,29 @@ const settingsSchema = z.object({
   bankDetails: z.string().optional(),
 });
 
+export async function GET(request: Request) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session || !session.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: (session.user as any).id },
+      select: {
+        paypalEmail: true,
+        bankDetails: true,
+      }
+    });
+
+    return NextResponse.json(user);
+  } catch (error) {
+    console.error("Error fetching settings:", error);
+    return NextResponse.json({ error: "Failed to fetch settings" }, { status: 500 });
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);

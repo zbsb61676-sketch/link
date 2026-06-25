@@ -11,7 +11,10 @@ const listingSchema = z.object({
   location: z.string().min(2),
   whatsappNumber: z.string().min(5),
   linkedinUrl: z.string().url(),
-  price: z.string().min(1).regex(/^\d+(\.\d{1,2})?$/),
+  price: z.string().min(1).regex(/^\d+(\.\d{1,2})?$/).refine(val => {
+    const num = parseFloat(val);
+    return num >= 100 && num <= 10000;
+  }, "Price must be between ₹100 and ₹10,000"),
   verificationCode: z.string().optional(),
 });
 

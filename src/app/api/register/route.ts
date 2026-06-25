@@ -6,14 +6,26 @@ export async function POST(req: Request) {
   try {
     const { name, email, password } = await req.json();
 
-    if (!email || !password) {
-      return NextResponse.json({ error: "Missing email or password" }, { status: 400 });
+    if (!email || !password || !name) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
+
+    if (password.length < 8) {
+      return NextResponse.json({ error: "Password must be at least 8 characters long" }, { status: 400 });
+    }
+
+    if (name.length < 2 || name.length > 50) {
+      return NextResponse.json({ error: "Name must be between 2 and 50 characters" }, { status: 400 });
+    }
+
+    // Sanitize name (basic)
+    const sanitizedName = name.trim().replace(/[<>]/g, '');
 
     const disposableDomains = [
       "mailinator.com", "yopmail.com", "tempmail.com", "10minutemail.com", 
       "guerrillamail.com", "sharklasers.com", "throwawaymail.com", "temp-mail.org",
-      "fakemail.net", "trashmail.com"
+      "fakemail.net", "trashmail.com", "getnada.com", "dropmail.me", "maildrop.cc",
+      "dispostable.com", "nada.ltd"
     ];
 
     const emailDomain = email.split('@')[1]?.toLowerCase();
@@ -33,7 +45,7 @@ export async function POST(req: Request) {
 
     const user = await prisma.user.create({
       data: {
-        name,
+        name: sanitizedName,
         email,
         password: hashedPassword,
       },

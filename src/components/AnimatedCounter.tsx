@@ -7,6 +7,7 @@ export default function AnimatedCounter({ value, prefix = "₹" }: { value: numb
 
   useEffect(() => {
     let startTime: number;
+    let animationFrameId: number;
     const duration = 2000; // 2 seconds
     
     const animate = (timestamp: number) => {
@@ -19,11 +20,13 @@ export default function AnimatedCounter({ value, prefix = "₹" }: { value: numb
       setCount(Math.floor(easeOut * value));
       
       if (progress < duration) {
-        requestAnimationFrame(animate);
+        animationFrameId = requestAnimationFrame(animate);
       }
     };
     
-    requestAnimationFrame(animate);
+    animationFrameId = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(animationFrameId);
   }, [value]);
 
   return <span>{prefix}{count.toLocaleString()}</span>;

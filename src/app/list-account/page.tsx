@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { useSession } from "next-auth/react";
 import { CheckCircle2, ShieldCheck, IndianRupee, AlertCircle, Copy } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,6 +27,14 @@ export default function ListAccountPage() {
   const [loading, setLoading] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
   const [showTerms, setShowTerms] = useState(true);
+
+  const { status } = useSession();
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login");
+    }
+  }, [status, router]);
 
   useEffect(() => {
     setVerificationCode(`Verify-${Math.random().toString(36).substring(2, 8).toUpperCase()}`);
