@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -19,9 +19,11 @@ export async function POST(
     if (!amount || typeof amount !== 'number' || amount <= 0) {
       return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
     }
+    
+    const { id } = await params;
 
     const listing = await prisma.accountListing.findUnique({
-      where: { id: params.id },
+      where: { id: id },
       include: { rentals: { where: { status: 'ACTIVE' } } }
     });
 
