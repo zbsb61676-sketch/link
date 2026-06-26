@@ -50,6 +50,7 @@ model AccountListing {
   linkedinUrl    String?
   whatsappNumber String?
   verificationCode String?
+  screenshotBase64 String?  @db.Text
 
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt

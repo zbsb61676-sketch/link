@@ -27,6 +27,8 @@ export default function ListAccountPage() {
   const [loading, setLoading] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
   const [showTerms, setShowTerms] = useState(true);
+  const [screenshotBase64, setScreenshotBase64] = useState<string | null>(null);
+  const [screenshotError, setScreenshotError] = useState("");
 
   const { status } = useSession();
 
@@ -39,6 +41,43 @@ export default function ListAccountPage() {
   useEffect(() => {
     setVerificationCode(`Verify-${Math.random().toString(36).substring(2, 8).toUpperCase()}`);
   }, []);
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setScreenshotError("");
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      setScreenshotError("Please upload a valid image file.");
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setScreenshotError("Image must be smaller than 10MB.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const MAX_WIDTH = 800; // Shrink significantly for DB storage
+        let scaleSize = MAX_WIDTH / img.width;
+        if (scaleSize > 1) scaleSize = 1; // don't upscale
+        
+        canvas.width = img.width * scaleSize;
+        canvas.height = img.height * scaleSize;
+        
+        const ctx = canvas.getContext("2d");
+        ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
+        
+        // highly compressed jpeg
+        const compressedBase64 = canvas.toDataURL("image/jpeg", 0.5);
+        setScreenshotBase64(compressedBase64);
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  };
 
   const {
     register,
@@ -74,6 +113,11 @@ export default function ListAccountPage() {
   }, [connections, setValue]);
 
   const onSubmit = async (data: ListingFormValues) => {
+    if (!screenshotBase64) {
+      setScreenshotError("Please upload a screenshot of your LinkedIn profile.");
+      return;
+    }
+
     setLoading(true);
     const loadingToast = toast.loading("Submitting your listing...");
 
@@ -81,7 +125,7 @@ export default function ListAccountPage() {
       const res = await fetch("/api/listings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data, verificationCode }),
+        body: JSON.stringify({ ...data, verificationCode, screenshotBase64 }),
       });
 
       if (res.ok) {
@@ -213,6 +257,30 @@ export default function ListAccountPage() {
                         <p className="mt-1 text-sm text-red-500 flex items-center gap-1"><AlertCircle size={14}/> {errors.linkedinUrl.message}</p>
                       )}
                     </div>
+                  </div>
+                  
+                  <hr className="border-slate-200" />
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">Verification Screenshot</label>
+                    <p className="text-xs text-slate-500 mb-3">Please upload a screenshot of your LinkedIn profile showing your connections.</p>
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-brand bg-white text-slate-900 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-brand file:text-white hover:file:bg-brand-hover cursor-pointer"
+                    />
+                    {screenshotError && (
+                      <p className="mt-2 text-sm text-red-500 flex items-center gap-1"><AlertCircle size={14}/> {screenshotError}</p>
+                    )}
+                    {screenshotBase64 && !screenshotError && (
+                      <div className="mt-3 relative w-32 h-32 rounded-lg overflow-hidden border border-slate-200 shadow-sm">
+                        <img src={screenshotBase64} alt="Screenshot Preview" className="object-cover w-full h-full" />
+                        <div className="absolute inset-0 bg-green-500/10 flex items-center justify-center backdrop-blur-[1px]">
+                          <CheckCircle2 className="text-green-600 bg-white rounded-full" size={24} />
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   <hr className="border-slate-200" />

@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ShieldCheck, DollarSign, MessageCircle, PlusCircle } from "lucide-react";
+import { ShieldCheck, DollarSign, MessageCircle, PlusCircle, Image as ImageIcon, X } from "lucide-react";
 
 export default function AdminAccountTableRow({ account }: { account: any }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [showScreenshot, setShowScreenshot] = useState(false);
 
   // Check if button should be enabled
   const activeRental = account.rentals?.[0];
@@ -139,6 +140,35 @@ export default function AdminAccountTableRow({ account }: { account: any }) {
 
       <td className="p-4">
         <div className="flex items-center gap-2">
+          {/* View Screenshot Action */}
+          {account.screenshotBase64 && (
+            <>
+              <button 
+                onClick={() => setShowScreenshot(true)}
+                className="p-1.5 bg-purple-50 text-purple-600 rounded hover:bg-purple-100 transition-colors"
+                title="View Verification Screenshot"
+              >
+                <ImageIcon size={16} />
+              </button>
+
+              {showScreenshot && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4">
+                  <div className="relative max-w-4xl max-h-[90vh] bg-white rounded-xl overflow-hidden shadow-2xl flex flex-col">
+                    <div className="flex justify-between items-center p-4 border-b border-slate-100 bg-slate-50">
+                      <h3 className="font-bold text-slate-900">Verification Screenshot - {account.owner.name}</h3>
+                      <button onClick={() => setShowScreenshot(false)} className="p-1 bg-slate-200 hover:bg-slate-300 rounded-full text-slate-600 transition-colors">
+                        <X size={20} />
+                      </button>
+                    </div>
+                    <div className="overflow-auto p-4 flex-1">
+                      <img src={account.screenshotBase64} alt="Screenshot" className="max-w-full h-auto object-contain mx-auto" />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+
           {/* Action to Message the User - Added for Chat Feature */}
           <button 
             onClick={() => router.push(`/admin/messages?userId=${account.ownerId}`)}

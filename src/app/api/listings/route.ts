@@ -16,6 +16,7 @@ const listingSchema = z.object({
     return num >= 100 && num <= 10000;
   }, "Price must be between ₹100 and ₹10,000"),
   verificationCode: z.string().optional(),
+  screenshotBase64: z.string().optional(),
 });
 
 export async function GET() {
@@ -70,6 +71,7 @@ export async function POST(req: Request) {
         linkedinUrl: data.linkedinUrl,
         whatsappNumber: data.whatsappNumber,
         verificationCode: data.verificationCode,
+        screenshotBase64: data.screenshotBase64,
         ownerId: (session.user as any).id,
       }
     });
