@@ -197,3 +197,32 @@ export async function sendPaymentCompletedEmail(to: string, name: string, amount
     html,
   });
 }
+
+export async function sendPasswordResetEmail(email: string, token: string) {
+  const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+  const resetUrl = `${baseUrl}/reset-password?token=${token}`;
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px;">
+      <h2 style="color: #0f172a;">Password Reset Request</h2>
+      <p style="color: #334155; font-size: 16px;">
+        We received a request to reset your password for your LinkRent account. 
+        Click the button below to choose a new password.
+      </p>
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${resetUrl}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px;">
+          Reset Password
+        </a>
+      </div>
+      <p style="color: #64748b; font-size: 14px; margin-top: 30px;">
+        If you did not request this, please ignore this email. Your password will remain unchanged. This link expires in 1 hour.
+      </p>
+    </div>
+  `;
+
+  return sendEmail({
+    to: email,
+    subject: 'Reset your LinkRent Password',
+    html,
+  });
+}
