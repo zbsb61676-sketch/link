@@ -105,7 +105,7 @@ function escapeHtml(unsafe: string) {
 }
 
 export async function sendAdminNewListingEmail(listingDetails: { name: string, email: string, connections: number, linkedinUrl: string }) {
-  const adminEmail = process.env.EMAIL_USER as string; // Send to ourselves
+  const adminEmail = "beheraguruprasad466777@gmail.com"; // Admin email to receive alerts
   
   const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
   
