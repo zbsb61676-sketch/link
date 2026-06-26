@@ -226,3 +226,40 @@ export async function sendPasswordResetEmail(email: string, token: string) {
     html,
   });
 }
+
+export async function sendDripEmail(email: string, name: string) {
+  const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+  const addAccountUrl = `${baseUrl}/list-account`;
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px;">
+      <h2 style="color: #0f172a;">You're missing out on ₹900/week! 💸</h2>
+      <p style="color: #334155; font-size: 16px;">
+        Hi ${escapeHtml(name) || 'there'},
+      </p>
+      <p style="color: #334155; font-size: 16px;">
+        We noticed you created a LinkRent account, but you haven't listed your LinkedIn profile yet. 
+        You are just <strong>one step away</strong> from earning guaranteed passive income!
+      </p>
+      <p style="color: #334155; font-size: 16px;">
+        ✅ We don't need your password (we use secure session cookies).<br/>
+        ✅ We never spam. We strictly use your account for B2B networking.<br/>
+        ✅ You can cancel and revoke access at any time.
+      </p>
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${addAccountUrl}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px;">
+          List Your Account Now
+        </a>
+      </div>
+      <p style="color: #64748b; font-size: 14px; margin-top: 30px;">
+        Don't leave money on the table. Join hundreds of other professionals renting their accounts today!
+      </p>
+    </div>
+  `;
+
+  return sendEmail({
+    to: email,
+    subject: "Still waiting? Earn ₹900 this week. 🚀",
+    html,
+  });
+}

@@ -26,6 +26,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   resetToken    String?   @unique
   resetTokenExpiry DateTime?
+  hasReceivedDripEmail Boolean @default(false)
 
   listings      AccountListing[]
   rentals       Rental[]
