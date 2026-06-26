@@ -5,6 +5,7 @@ import EarningsCalculator from "@/components/EarningsCalculator";
 import { ArrowRight, CheckCircle2, TrendingUp, ShieldCheck, Lock, DollarSign } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import AnimatedCounter from "@/components/AnimatedCounter";
+import SocialProofTicker from "@/components/SocialProofTicker";
 
 export const dynamic = "force-dynamic";
 
@@ -191,6 +192,7 @@ export default async function Home() {
       </main>
 
       <Footer />
+      <SocialProofTicker />
     </div>
   );
 }
