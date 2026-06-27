@@ -31,6 +31,9 @@ export default function Navbar() {
                   <Link href="/admin/payments" className="text-sm font-medium text-slate-600 hover:text-brand transition-colors">
                     Admin Payouts
                   </Link>
+                  <Link href="/admin/support" className="text-sm font-medium text-slate-600 hover:text-brand transition-colors">
+                    Admin Support
+                  </Link>
                 </>
               )}
               <Link href="/dashboard" className="text-sm font-medium text-slate-600 hover:text-brand transition-colors">
@@ -41,6 +44,9 @@ export default function Navbar() {
               </Link>
               <Link href="/dashboard/payments" className="text-sm font-medium text-slate-600 hover:text-brand transition-colors">
                 Payment History
+              </Link>
+              <Link href="/dashboard/support" className="text-sm font-medium text-slate-600 hover:text-brand transition-colors">
+                Support
               </Link>
               <Link href="/list-account" className="text-sm font-medium text-slate-600 hover:text-brand transition-colors">
                 List Your Account
@@ -126,6 +132,9 @@ export default function Navbar() {
                     <Link onClick={() => setIsMobileMenuOpen(false)} href="/admin/payments" className="text-sm font-medium text-slate-600 hover:text-brand">
                       Admin Payouts
                     </Link>
+                    <Link onClick={() => setIsMobileMenuOpen(false)} href="/admin/support" className="text-sm font-medium text-slate-600 hover:text-brand">
+                      Admin Support
+                    </Link>
                   </>
                 )}
                 <Link onClick={() => setIsMobileMenuOpen(false)} href="/dashboard" className="text-sm font-medium text-slate-600 hover:text-brand">
@@ -133,6 +142,9 @@ export default function Navbar() {
                 </Link>
                 <Link onClick={() => setIsMobileMenuOpen(false)} href="/dashboard/payments" className="text-sm font-medium text-slate-600 hover:text-brand">
                   Payment History
+                </Link>
+                <Link onClick={() => setIsMobileMenuOpen(false)} href="/dashboard/support" className="text-sm font-medium text-slate-600 hover:text-brand">
+                  Support
                 </Link>
                 <Link onClick={() => setIsMobileMenuOpen(false)} href="/list-account" className="text-sm font-medium text-slate-600 hover:text-brand">
                   List Your Account
