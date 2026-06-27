@@ -2,13 +2,13 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/email";
 
-const cronSecret = process.env.CRON_SECRET;
-if (!cronSecret) {
-  throw new Error("CRON_SECRET environment variable is required for cron endpoints");
-}
-
 export async function GET(request: Request) {
   try {
+    const cronSecret = process.env.CRON_SECRET;
+    if (!cronSecret) {
+      return new Response("CRON_SECRET environment variable is required for cron endpoints", { status: 500 });
+    }
+
     // Basic security check to ensure it's not abused publicly
     const authHeader = request.headers.get('authorization');
     if (authHeader !== `Bearer ${cronSecret}`) {

@@ -3,13 +3,13 @@ import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
-const cronSecret = process.env.CRON_SECRET;
-if (!cronSecret) {
-  throw new Error("CRON_SECRET environment variable is required for cron endpoints");
-}
-
 export async function GET(req: Request) {
   try {
+    const cronSecret = process.env.CRON_SECRET;
+    if (!cronSecret) {
+      return NextResponse.json({ error: "CRON_SECRET environment variable is required for cron endpoints" }, { status: 500 });
+    }
+
     // 1. Verify Vercel Cron Secret to prevent unauthorized access
     const authHeader = req.headers.get("authorization");
     
