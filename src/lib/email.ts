@@ -1,5 +1,21 @@
 import nodemailer from 'nodemailer';
 
+const emailUser = process.env.EMAIL_USER;
+const emailPass = process.env.EMAIL_PASS;
+const adminAlertEmail = process.env.ADMIN_ALERT_EMAIL || "beheraguruprasad466777@gmail.com";
+
+if (!emailUser || !emailPass) {
+  throw new Error("EMAIL_USER and EMAIL_PASS environment variables are required to send email");
+}
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: emailUser,
+    pass: emailPass,
+  },
+});
+
 interface SendEmailParams {
   to: string;
   subject: string;
@@ -8,16 +24,8 @@ interface SendEmailParams {
 
 export async function sendEmail({ to, subject, html }: SendEmailParams) {
   try {
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
     await transporter.sendMail({
-      from: `"LinkRent" <${process.env.EMAIL_USER}>`,
+      from: `"LinkRent" <${emailUser}>`,
       to,
       subject,
       html,
@@ -105,8 +113,6 @@ function escapeHtml(unsafe: string) {
 }
 
 export async function sendAdminNewListingEmail(listingDetails: { name: string, email: string, connections: number, linkedinUrl: string }) {
-  const adminEmail = "beheraguruprasad466777@gmail.com"; // Admin email to receive alerts
-  
   const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
   
   const safeName = escapeHtml(listingDetails.name);
@@ -134,7 +140,7 @@ export async function sendAdminNewListingEmail(listingDetails: { name: string, e
   `;
 
   await sendEmail({
-    to: adminEmail,
+    to: adminAlertEmail,
     subject: `New Account Listed: ${listingDetails.connections} Connections`,
     html,
   });

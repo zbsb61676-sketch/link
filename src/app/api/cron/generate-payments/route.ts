@@ -1,20 +1,17 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import nodemailer from "nodemailer";
+import { sendEmail } from "@/lib/email";
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const cronSecret = process.env.CRON_SECRET;
+if (!cronSecret) {
+  throw new Error("CRON_SECRET environment variable is required for cron endpoints");
+}
 
 export async function GET(request: Request) {
   try {
     // Basic security check to ensure it's not abused publicly
     const authHeader = request.headers.get('authorization');
-    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    if (authHeader !== `Bearer ${cronSecret}`) {
       console.log("Unauthorized request to generate-payments cron. Ensure CRON_SECRET is set and passed.");
       return new Response('Unauthorized', { status: 401 });
     }
@@ -70,16 +67,15 @@ export async function GET(request: Request) {
             })
           ]);
           
-          if (rental.listing.owner.email && process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-            try {
-              await transporter.sendMail({
-                from: `"LinkRent Payouts" <${process.env.EMAIL_USER}>`,
-                to: rental.listing.owner.email,
-                subject: "Your LinkRent payout is ready!",
-                html: `<p>Great news! Your payout of <strong>₹${price}</strong> has been generated.</p><p>Log into your dashboard to request your payout.</p>`
-              });
-            } catch (err) {
-              console.error("Failed to send 24h payout email via SMTP", err);
+if (rental.listing.owner.email) {
+          try {
+            await sendEmail({
+              to: rental.listing.owner.email,
+              subject: "Your LinkRent payout is ready!",
+              html: `<p>Great news! Your payout of <strong>₹${price}</strong> has been generated.</p><p>Log into your dashboard to request your payout.</p>`,
+            });
+          } catch (err) {
+            console.error("Failed to send 24h payout email", err);
             }
           }
           
@@ -111,16 +107,15 @@ export async function GET(request: Request) {
           })
         ]);
         
-        if (rental.listing.owner.email && process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+        if (rental.listing.owner.email) {
           try {
-            await transporter.sendMail({
-              from: `"LinkRent Payouts" <${process.env.EMAIL_USER}>`,
+            await sendEmail({
               to: rental.listing.owner.email,
               subject: "Your LinkRent payout is ready!",
-              html: `<p>Great news! Your payout of <strong>₹${price}</strong> has been generated.</p><p>Log into your dashboard to request your payout.</p>`
+              html: `<p>Great news! Your payout of <strong>₹${price}</strong> has been generated.</p><p>Log into your dashboard to request your payout.</p>`,
             });
           } catch (err) {
-            console.error("Failed to send 7d payout email via SMTP", err);
+            console.error("Failed to send 7d payout email", err);
           }
         }
         

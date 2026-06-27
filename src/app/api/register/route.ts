@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 
 export async function POST(req: Request) {
   try {
@@ -8,6 +9,18 @@ export async function POST(req: Request) {
 
     if (!email || !password || !name) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email.trim())) {
+      return NextResponse.json({ error: "Invalid email address" }, { status: 400 });
+    }
+
+    const sanitizedEmail = email.trim().toLowerCase();
+    const emailDomain = sanitizedEmail.split("@")[1];
+
+    if (!emailDomain) {
+      return NextResponse.json({ error: "Invalid email address" }, { status: 400 });
     }
 
     if (password.length < 8) {
@@ -28,13 +41,12 @@ export async function POST(req: Request) {
       "dispostable.com", "nada.ltd"
     ];
 
-    const emailDomain = email.split('@')[1]?.toLowerCase();
     if (disposableDomains.includes(emailDomain)) {
       return NextResponse.json({ error: "Disposable email addresses are not allowed for security reasons." }, { status: 400 });
     }
 
     const existingUser = await prisma.user.findUnique({
-      where: { email },
+      where: { email: sanitizedEmail },
     });
 
     if (existingUser) {
@@ -46,7 +58,7 @@ export async function POST(req: Request) {
     const user = await prisma.user.create({
       data: {
         name: sanitizedName,
-        email,
+        email: sanitizedEmail,
         password: hashedPassword,
       },
     });
@@ -55,7 +67,7 @@ export async function POST(req: Request) {
     
     await prisma.verificationToken.create({
       data: {
-        identifier: email,
+        identifier: sanitizedEmail,
         token,
         expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
       }
@@ -63,7 +75,7 @@ export async function POST(req: Request) {
 
     // Send verification email
     const { sendVerificationEmail } = await import("@/lib/email");
-    await sendVerificationEmail(email, token);
+    await sendVerificationEmail(sanitizedEmail, token);
 
     return NextResponse.json({ user: { id: user.id, email: user.email, name: user.name } }, { status: 201 });
   } catch (error: any) {

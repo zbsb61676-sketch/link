@@ -14,13 +14,24 @@ export async function POST(request: Request) {
 
     const { paymentIds, status } = await request.json();
 
-    if (!paymentIds || !Array.isArray(paymentIds) || !status) {
+    if (!paymentIds || !Array.isArray(paymentIds) || paymentIds.length === 0 || !status) {
       return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
     }
 
     const validStatuses = ["PENDING", "REQUESTED", "VERIFIED", "COMPLETED", "CANCELLED"];
     if (!validStatuses.includes(status)) {
       return NextResponse.json({ error: "Invalid status value" }, { status: 400 });
+    }
+
+    const existingPayments = await prisma.paymentRecord.findMany({
+      where: {
+        id: { in: paymentIds }
+      },
+      select: { id: true }
+    });
+
+    if (existingPayments.length === 0) {
+      return NextResponse.json({ error: "No matching payments found" }, { status: 404 });
     }
 
     const updatedPayments = await prisma.paymentRecord.updateMany({
