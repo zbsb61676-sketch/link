@@ -5,7 +5,7 @@ import crypto from "crypto";
 
 export async function POST(req: Request) {
   try {
-    const { name, email, password } = await req.json();
+    const { name, email, password, ref } = await req.json();
 
     if (!email || !password || !name) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -53,6 +53,18 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "User already exists" }, { status: 400 });
     }
 
+    // Verify if the referral code is a valid user ID
+    let validReferrerId = null;
+    if (ref && typeof ref === 'string') {
+      const referrer = await prisma.user.findUnique({
+        where: { id: ref },
+        select: { id: true }
+      });
+      if (referrer) {
+        validReferrerId = referrer.id;
+      }
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await prisma.user.create({
@@ -60,6 +72,7 @@ export async function POST(req: Request) {
         name: sanitizedName,
         email: sanitizedEmail,
         password: hashedPassword,
+        referredById: validReferrerId,
       },
     });
 
