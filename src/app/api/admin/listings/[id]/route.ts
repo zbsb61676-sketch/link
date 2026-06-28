@@ -26,7 +26,7 @@ export async function PATCH(
       const listing = await tx.accountListing.update({
         where: { id },
         data: { status },
-        include: { owner: { select: { name: true, email: true, referredById: true, referralBonusPaid: true } } },
+        include: { owner: { select: { name: true, email: true } } },
       });
 
       if (status === "RENTED") {
@@ -35,33 +35,14 @@ export async function PATCH(
           where: { listingId: id, status: "ACTIVE" }
         });
         
-        let newRental = existingRental;
-        
         if (!existingRental) {
-          newRental = await tx.rental.create({
+          await tx.rental.create({
             data: {
               listingId: id,
               renterId: (session.user as any).id, // Admin is the renter in this platform model
               status: "ACTIVE",
               startDate: new Date(),
             }
-          });
-        }
-        
-        // Handle Referral Bonus (₹100)
-        if (listing.owner.referredById && !listing.owner.referralBonusPaid) {
-          await tx.paymentRecord.create({
-            data: {
-              userId: listing.owner.referredById,
-              amount: 100.0,
-              status: "PENDING",
-              reference: `Referral Bonus for user ${listing.owner.name}`
-            }
-          });
-          
-          await tx.user.update({
-            where: { id: listing.ownerId },
-            data: { referralBonusPaid: true }
           });
         }
       } else {

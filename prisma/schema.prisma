@@ -27,11 +27,6 @@ model User {
   resetToken    String?   @unique
   resetTokenExpiry DateTime?
   hasReceivedDripEmail Boolean @default(false)
-  
-  referredById  String?
-  referredBy    User?     @relation("UserReferrals", fields: [referredById], references: [id])
-  referrals     User[]    @relation("UserReferrals")
-  referralBonusPaid Boolean @default(false)
 
   listings      AccountListing[]
   rentals       Rental[]

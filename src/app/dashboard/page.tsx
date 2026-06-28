@@ -5,7 +5,6 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Briefcase, MapPin, Users, Star, ShieldCheck, Edit2 } from "lucide-react";
 import { prisma } from "@/lib/prisma";
-import ReferralWidget from "@/components/ReferralWidget";
 
 import ListingCardActions from "@/components/ListingCardActions";
 
@@ -35,8 +34,6 @@ export default async function DashboardPage() {
             <h1 className="text-3xl font-bold text-slate-900 mb-2">My Accounts</h1>
             <p className="text-slate-600">Manage the LinkedIn accounts you have listed for rent.</p>
           </div>
-
-          <ReferralWidget userId={userId} />
 
           <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8 flex flex-col md:flex-row gap-6 items-center justify-between">
             <div>
