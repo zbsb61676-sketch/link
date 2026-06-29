@@ -27,7 +27,7 @@ export default function FallingFlowers() {
       delay: Math.random() * 10, // seconds
       duration: 10 + Math.random() * 15, // seconds (slow fall)
       size: 15 + Math.random() * 25, // pixels
-      type: Math.random() > 0.3 ? 'flower' : 'leaf' as const,
+      type: (Math.random() > 0.3 ? 'flower' : 'leaf') as 'flower' | 'leaf',
       color: Math.random() > 0.5 ? 'text-pink-200/60' : (Math.random() > 0.5 ? 'text-rose-200/50' : 'text-purple-200/50'),
       rotation: Math.random() * 360,
     }));
