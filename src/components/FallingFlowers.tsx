@@ -30,7 +30,7 @@ export default function FallingFlowers() {
         delay: Math.random() * 10, // seconds
         duration: isFirefly ? 8 + Math.random() * 10 : 10 + Math.random() * 15, // fireflies move slightly faster
         size: isFirefly ? 4 + Math.random() * 6 : 15 + Math.random() * 25, // fireflies are tiny
-        type: isFirefly ? 'firefly' : ((Math.random() > 0.3 ? 'flower' : 'leaf') as 'flower' | 'leaf'),
+        type: (isFirefly ? 'firefly' : (Math.random() > 0.3 ? 'flower' : 'leaf')) as 'flower' | 'leaf' | 'firefly',
         color: isFirefly 
           ? 'bg-yellow-200 shadow-[0_0_10px_3px_rgba(253,230,138,0.7)]' // Firefly glow
           : (Math.random() > 0.5 ? 'text-pink-200/60' : (Math.random() > 0.5 ? 'text-rose-200/50' : 'text-purple-200/50')),
