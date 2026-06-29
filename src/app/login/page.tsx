@@ -1,19 +1,25 @@
 "use client";
 
 import { useState, Suspense } from "react";
-import { signIn } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
+import { useRouter, useSearchParams } from "next/navigation";
+import { signIn } from "next-auth/react";
+import InteractiveCharacter from "@/components/InteractiveCharacter";
 
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const registered = searchParams.get("registered");
+  const registered = searchParams.get('registered') === 'true';
+  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
   
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [focusedField, setFocusedField] = useState<'none' | 'email' | 'password' | 'submit'>('none');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,99 +34,40 @@ function LoginContent() {
       });
 
       if (res?.error) {
-        setError("Invalid email or password");
+        setError(res.error);
       } else {
-        router.push("/");
+        router.push(callbackUrl);
         router.refresh();
       }
     } catch (err) {
-      setError("An unexpected error occurred");
+      setError("An error occurred during login. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
-      {/* Left side - Visual/Brand */}
-      <div className="hidden lg:flex w-1/2 bg-brand text-white flex-col justify-between p-12 relative overflow-hidden">
-        <div className="relative z-10">
-          <Link href="/" className="text-2xl font-black tracking-tight">LinkRent.</Link>
-          <div className="mt-16 max-w-lg">
-            <h1 className="text-5xl font-bold leading-tight mb-6">
-              Turn your LinkedIn into a passive income stream.
-            </h1>
-            <p className="text-brand-100 text-xl font-medium leading-relaxed">
-              Log in to manage your rented accounts, track your payouts, and monitor your earnings in real-time.
-            </p>
-          </div>
-        </div>
-        
+    <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row">
+      {/* Left side - Brand/Art */}
+      <div className="hidden md:flex md:w-1/2 relative bg-brand overflow-hidden items-center justify-center p-12">
         {/* Abstract decorative elements */}
         <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
         <div className="absolute top-32 -right-32 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl"></div>
         
-        {/* Animated Cartoon SVG - Waving Robot */}
-        <div className="absolute right-10 top-1/2 -translate-y-1/2 w-80 h-80 z-20 hidden xl:block">
-          <svg viewBox="0 0 400 400" className="w-full h-full drop-shadow-2xl">
-            {/* Hovering Animation Container */}
-            <g className="animate-[bounce_3s_ease-in-out_infinite]">
-              {/* Body */}
-              <rect x="140" y="160" width="120" height="140" rx="30" fill="#ffffff" />
-              <rect x="150" y="170" width="100" height="120" rx="20" fill="#f8fafc" />
-              
-              {/* Head */}
-              <g className="animate-[pulse_4s_ease-in-out_infinite]">
-                <rect x="130" y="60" width="140" height="90" rx="40" fill="#ffffff" />
-                <rect x="140" y="70" width="120" height="70" rx="30" fill="#0f172a" />
-                
-                {/* Eyes */}
-                <circle cx="170" cy="105" r="12" fill="#38bdf8" className="animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite]" />
-                <circle cx="170" cy="105" r="8" fill="#ffffff" />
-                <circle cx="230" cy="105" r="12" fill="#38bdf8" className="animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite_0.5s]" />
-                <circle cx="230" cy="105" r="8" fill="#ffffff" />
-                
-                {/* Smile */}
-                <path d="M 170 125 Q 200 145 230 125" stroke="#38bdf8" strokeWidth="6" strokeLinecap="round" fill="none" />
-              </g>
-              
-              {/* Antenna */}
-              <line x1="200" y1="60" x2="200" y2="30" stroke="#ffffff" strokeWidth="6" strokeLinecap="round" />
-              <circle cx="200" cy="20" r="10" fill="#fcd34d" className="animate-pulse" />
-              
-              {/* Left Arm (Waving) */}
-              <g className="origin-[130px_190px] animate-[spin_2s_ease-in-out_infinite_alternate]" style={{ transformOrigin: '130px 190px' }}>
-                <rect x="70" y="175" width="60" height="30" rx="15" fill="#ffffff" />
-                <circle cx="80" cy="190" r="20" fill="#38bdf8" />
-              </g>
-              
-              {/* Right Arm */}
-              <rect x="270" y="175" width="60" height="30" rx="15" fill="#ffffff" transform="rotate(30 270 175)" />
-              <circle cx="320" cy="205" r="20" fill="#38bdf8" />
-              
-              {/* Wheels / Base */}
-              <path d="M 160 300 L 240 300 L 260 330 L 140 330 Z" fill="#94a3b8" />
-              <circle cx="170" cy="330" r="15" fill="#0f172a" />
-              <circle cx="230" cy="330" r="15" fill="#0f172a" />
-            </g>
-            
-            {/* Sparkles */}
-            <path d="M 320 80 L 330 60 L 340 80 L 360 90 L 340 100 L 330 120 L 320 100 L 300 90 Z" fill="#fcd34d" className="animate-pulse origin-center scale-75" />
-            <path d="M 60 140 L 65 125 L 70 140 L 85 145 L 70 150 L 65 165 L 60 150 L 45 145 Z" fill="#fcd34d" className="animate-pulse origin-center scale-50" style={{ animationDelay: '1s' }} />
-          </svg>
-        </div>
+        {/* Animated Cartoon SVG - Peeking Owl */}
+        <InteractiveCharacter focusedField={focusedField} />
       </div>
 
       {/* Right side - Login Form */}
-      <div className="w-full lg:w-1/2 flex flex-col relative">
+      <div className="w-full md:w-1/2 flex flex-col relative">
         {/* Mobile Header */}
-        <div className="lg:hidden p-6 absolute top-0 left-0 right-0 flex justify-center">
+        <div className="md:hidden p-6 absolute top-0 left-0 right-0 flex justify-center">
           <Link href="/" className="text-2xl font-black tracking-tight text-brand">LinkRent.</Link>
         </div>
 
-        <main className="flex-1 flex items-center justify-center p-6 lg:p-12 mt-16 lg:mt-0">
+        <main className="flex-1 flex items-center justify-center p-6 lg:p-12 mt-16 md:mt-0">
           <div className="w-full max-w-md">
-            <div className="mb-10 text-center lg:text-left">
+            <div className="mb-10 text-center md:text-left">
               <h2 className="text-3xl font-bold text-slate-900 mb-2">Welcome Back</h2>
               <p className="text-slate-500 font-medium">Log in to your LinkRent account</p>
             </div>
@@ -149,6 +96,8 @@ function LoginContent() {
                   className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-slate-900 bg-slate-50 focus:bg-white transition-colors shadow-sm"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onFocus={() => setFocusedField('email')}
+                  onBlur={() => setFocusedField('none')}
                 />
               </div>
               <div>
@@ -163,12 +112,16 @@ function LoginContent() {
                   className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-slate-900 bg-slate-50 focus:bg-white transition-colors shadow-sm"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  onFocus={() => setFocusedField('password')}
+                  onBlur={() => setFocusedField('none')}
                 />
               </div>
               
               <button
                 type="submit"
                 disabled={loading}
+                onMouseEnter={() => setFocusedField('submit')}
+                onMouseLeave={() => setFocusedField('none')}
                 className="w-full py-3.5 bg-brand text-white rounded-xl font-bold hover:bg-brand-hover hover:shadow-lg hover:shadow-brand/20 transition-all disabled:opacity-50 disabled:hover:shadow-none mt-4 text-lg"
               >
                 {loading ? (
