@@ -21,7 +21,7 @@ export default function FallingFlowers() {
 
   useEffect(() => {
     // Generate random falling elements and fireflies
-    const newElements = Array.from({ length: 50 }).map((_, i) => {
+    const newElements = Array.from({ length: 25 }).map((_, i) => {
       const isFirefly = Math.random() > 0.6;
       
       return {
@@ -45,25 +45,27 @@ export default function FallingFlowers() {
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
       <style>{`
         @keyframes fallAndSway {
-          0% { transform: translateY(-10vh) translateX(0px) rotate(0deg); opacity: 0; }
+          0% { transform: translate3d(0px, -10vh, 0) rotate(0deg); opacity: 0; }
           10% { opacity: 1; }
-          50% { transform: translateY(50vh) translateX(40px) rotate(180deg); }
+          50% { transform: translate3d(40px, 50vh, 0) rotate(180deg); }
           90% { opacity: 1; }
-          100% { transform: translateY(110vh) translateX(-30px) rotate(360deg); opacity: 0; }
+          100% { transform: translate3d(-30px, 110vh, 0) rotate(360deg); opacity: 0; }
         }
         
         @keyframes floatUp {
-          0% { transform: translateY(110vh) translateX(0px); opacity: 0; }
+          0% { transform: translate3d(0px, 110vh, 0); opacity: 0; }
           10% { opacity: 0.8; }
-          50% { transform: translateY(50vh) translateX(-30px); opacity: 1; }
+          50% { transform: translate3d(-30px, 50vh, 0); opacity: 1; }
           90% { opacity: 0.8; }
-          100% { transform: translateY(-10vh) translateX(20px); opacity: 0; }
+          100% { transform: translate3d(20px, -10vh, 0); opacity: 0; }
         }
         
         .falling-element {
           animation: fallAndSway linear infinite;
           position: absolute;
           top: -50px;
+          will-change: transform, opacity;
+          transform: translateZ(0);
         }
         
         .firefly-element {
@@ -71,6 +73,8 @@ export default function FallingFlowers() {
           position: absolute;
           bottom: -50px;
           border-radius: 50%;
+          will-change: transform, opacity;
+          transform: translateZ(0);
         }
       `}</style>
       

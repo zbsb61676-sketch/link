@@ -65,8 +65,8 @@ export default function SignupPage() {
 
       {/* Abstract Glowing Orbs in Background */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
-        <div className="absolute -bottom-32 -left-32 w-[30rem] h-[30rem] bg-cyan-300/30 rounded-full blur-[100px] mix-blend-screen animate-pulse duration-1000"></div>
-        <div className="absolute top-1/4 right-1/4 w-[25rem] h-[25rem] bg-fuchsia-400/20 rounded-full blur-[100px] mix-blend-screen animate-pulse duration-700"></div>
+        <div className="absolute -bottom-32 -left-32 w-[30rem] h-[30rem] bg-cyan-300/30 rounded-full blur-3xl mix-blend-screen animate-pulse duration-1000 transform-gpu"></div>
+        <div className="absolute top-1/4 right-1/4 w-[25rem] h-[25rem] bg-fuchsia-400/20 rounded-full blur-3xl mix-blend-screen animate-pulse duration-700 transform-gpu"></div>
       </div>
       
       {/* Falling Flowers Animation (with fireflies) */}
@@ -74,26 +74,28 @@ export default function SignupPage() {
       
       {/* Brand Header */}
       <div className="absolute top-6 left-6 md:top-10 md:left-10 z-30">
-        <Link href="/" className="text-3xl font-black tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.3)] hover:scale-105 transition-transform duration-300 block">LinkRent.</Link>
+        <Link href="/" className="text-3xl font-black tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.3)] hover:scale-105 transition-transform duration-300 block transform-gpu">LinkRent.</Link>
       </div>
 
       <div className="w-full max-w-md relative z-10 mt-20 md:mt-0">
         {/* Animated Cartoon Characters sitting on top of the box with Magical Glowing Aura */}
         <div className="w-full absolute -top-28 left-0 right-0 flex justify-center pointer-events-none drop-shadow-2xl">
           {/* Glowing Aura Behind Characters */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-32 bg-white/40 blur-3xl rounded-full mix-blend-overlay"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-32 bg-white/40 blur-2xl rounded-full mix-blend-overlay transform-gpu"></div>
           <InteractiveCharacter focusedField={focusedField} emailValue={formData.email} />
         </div>
         
         {/* Main Signup Card - Adding floating animation */}
         <style>{`
           @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
+            0% { transform: translate3d(0, 0px, 0); }
+            50% { transform: translate3d(0, -10px, 0); }
+            100% { transform: translate3d(0, 0px, 0); }
           }
           .floating-card {
             animation: float 6s ease-in-out infinite;
+            will-change: transform;
+            transform: translateZ(0);
           }
         `}</style>
         <main className="floating-card bg-white/90 backdrop-blur-2xl rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.8)] border border-white/50 p-8 md:p-10 relative pt-12">
