@@ -48,24 +48,41 @@ function LoginContent() {
   };
 
   return (
-    <div className="min-h-screen bg-brand flex flex-col items-center justify-center p-4 md:p-8 relative overflow-hidden">
-      {/* Background Decorative Elements */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
-        <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/4 right-1/4 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl"></div>
+    <div className="min-h-screen relative flex flex-col items-center justify-center p-4 md:p-8 overflow-hidden">
+      {/* Animated Mesh Gradient Background */}
+      <style>{`
+        @keyframes gradientShift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        .animated-bg {
+          background: linear-gradient(-45deg, #0ea5e9, #3b82f6, #6366f1, #8b5cf6, #ec4899);
+          background-size: 400% 400%;
+          animation: gradientShift 15s ease infinite;
+        }
+      `}</style>
+      <div className="animated-bg absolute inset-0 z-0"></div>
+
+      {/* Abstract Glowing Orbs in Background */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+        <div className="absolute -bottom-32 -left-32 w-[30rem] h-[30rem] bg-cyan-300/30 rounded-full blur-[100px] mix-blend-screen animate-pulse duration-1000"></div>
+        <div className="absolute top-1/4 right-1/4 w-[25rem] h-[25rem] bg-fuchsia-400/20 rounded-full blur-[100px] mix-blend-screen animate-pulse duration-700"></div>
       </div>
       
-      {/* Falling Flowers Animation */}
+      {/* Falling Flowers Animation (with fireflies) */}
       <FallingFlowers />
       
       {/* Brand Header */}
       <div className="absolute top-6 left-6 md:top-10 md:left-10 z-30">
-        <Link href="/" className="text-3xl font-black tracking-tight text-white drop-shadow-md hover:scale-105 transition-transform duration-300 block">LinkRent.</Link>
+        <Link href="/" className="text-3xl font-black tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.3)] hover:scale-105 transition-transform duration-300 block">LinkRent.</Link>
       </div>
 
-      <div className="w-full max-w-md relative z-10 mt-16 md:mt-0">
-        {/* Animated Cartoon Characters sitting on top of the box */}
+      <div className="w-full max-w-md relative z-10 mt-20 md:mt-0">
+        {/* Animated Cartoon Characters sitting on top of the box with Magical Glowing Aura */}
         <div className="w-full absolute -top-28 left-0 right-0 flex justify-center pointer-events-none drop-shadow-2xl">
+          {/* Glowing Aura Behind Characters */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-32 bg-white/40 blur-3xl rounded-full mix-blend-overlay"></div>
           <InteractiveCharacter focusedField={focusedField} emailValue={formData.email} />
         </div>
         
@@ -80,22 +97,22 @@ function LoginContent() {
             animation: float 6s ease-in-out infinite;
           }
         `}</style>
-        <main className="floating-card bg-white/95 backdrop-blur-xl rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-white p-8 md:p-10 relative pt-12">
+        <main className="floating-card bg-white/90 backdrop-blur-2xl rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.8)] border border-white/50 p-8 md:p-10 relative pt-12">
           
           <div className="mb-8 text-center">
-            <h2 className="text-3xl font-bold text-slate-900 mb-2">Welcome Back</h2>
+            <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 mb-2">Welcome Back</h2>
             <p className="text-slate-500 font-medium">Log in to manage your earnings.</p>
           </div>
 
           {registered && (
-              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl mb-6 text-sm flex items-center shadow-sm">
-                <svg className="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path></svg>
-                Registration successful! Please log in.
-              </div>
+            <div className="bg-green-50/80 backdrop-blur border border-green-200/50 text-green-700 px-4 py-3 rounded-xl mb-6 text-sm flex items-center shadow-sm">
+              <svg className="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path></svg>
+              Registration successful! Please log in.
+            </div>
           )}
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-6 text-sm flex items-center shadow-sm animate-pulse">
+            <div className="bg-red-50/80 backdrop-blur border border-red-200/50 text-red-600 px-4 py-3 rounded-xl mb-6 text-sm flex items-center shadow-sm animate-pulse">
               <svg className="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd"></path></svg>
               {error}
             </div>
@@ -108,7 +125,7 @@ function LoginContent() {
                 type="email"
                 required
                 placeholder="name@example.com"
-                className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-slate-900 bg-slate-50 focus:bg-white transition-colors shadow-sm"
+                className="w-full px-4 py-3.5 border border-slate-200 rounded-xl focus:ring-4 focus:ring-brand/20 focus:border-brand outline-none text-slate-900 bg-white/50 focus:bg-white transition-all shadow-sm"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 onFocus={() => setFocusedField('email')}
@@ -127,7 +144,7 @@ function LoginContent() {
                 type="password"
                 required
                 placeholder="••••••••"
-                className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-slate-900 bg-slate-50 focus:bg-white transition-colors shadow-sm"
+                className="w-full px-4 py-3.5 border border-slate-200 rounded-xl focus:ring-4 focus:ring-brand/20 focus:border-brand outline-none text-slate-900 bg-white/50 focus:bg-white transition-all shadow-sm"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 onFocus={() => setFocusedField('password')}
@@ -140,7 +157,7 @@ function LoginContent() {
               disabled={loading}
               onMouseEnter={() => setFocusedField('submit')}
               onMouseLeave={() => setFocusedField('none')}
-              className="w-full py-3.5 bg-brand text-white rounded-xl font-bold hover:bg-brand-hover hover:shadow-lg hover:shadow-brand/30 transition-all disabled:opacity-50 disabled:hover:shadow-none mt-2 text-lg"
+              className="w-full py-4 bg-gradient-to-r from-brand to-blue-600 text-white rounded-xl font-bold hover:shadow-[0_10px_20px_rgba(37,99,235,0.3)] hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:hover:shadow-none disabled:hover:translate-y-0 mt-2 text-lg"
             >
               {loading ? (
                 <span className="flex items-center justify-center">
@@ -153,7 +170,7 @@ function LoginContent() {
           
           <div className="mt-8 pt-6 border-t border-slate-100">
             <p className="text-center text-slate-600 font-medium">
-              Don't have an account? <Link href="/signup" className="text-brand font-bold hover:text-brand-hover transition-colors">Sign up</Link>
+              Don't have an account? <Link href="/signup" className="text-brand font-bold hover:text-brand-hover hover:underline underline-offset-4 transition-all">Sign up</Link>
             </p>
           </div>
         </main>
@@ -164,7 +181,7 @@ function LoginContent() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-slate-50 flex flex-col justify-center items-center"><div className="animate-spin w-8 h-8 border-4 border-brand border-t-transparent rounded-full"></div></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-brand flex items-center justify-center"><div className="animate-pulse w-16 h-16 bg-white/20 rounded-full"></div></div>}>
       <LoginContent />
     </Suspense>
   );
