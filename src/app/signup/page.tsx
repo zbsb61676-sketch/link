@@ -53,8 +53,8 @@ export default function SignupPage() {
         <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
         <div className="absolute top-32 -right-32 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl"></div>
         
-        {/* Animated Cartoon SVG - Peeking Owl */}
-        <InteractiveCharacter focusedField={focusedField} />
+        {/* Animated Cartoon SVG - Peeking Bear */}
+        <InteractiveCharacter focusedField={focusedField} emailValue={formData.email} />
       </div>
 
       {/* Right side - Signup Form */}
