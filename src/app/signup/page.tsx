@@ -46,140 +46,142 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row">
-      {/* Left side - Brand/Art */}
-      <div className="hidden md:flex md:w-1/2 relative bg-brand overflow-hidden items-center justify-center p-12">
-        {/* Abstract decorative elements */}
+    <div className="min-h-screen bg-brand flex flex-col items-center justify-center p-4 md:p-8 relative overflow-hidden">
+      {/* Background Decorative Elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
         <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-32 -right-32 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl"></div>
-        
-        {/* Animated Cartoon SVG - Peeking Bear */}
-        <InteractiveCharacter focusedField={focusedField} emailValue={formData.email} />
+        <div className="absolute top-1/4 right-1/4 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl"></div>
+      </div>
+      
+      {/* Brand Header */}
+      <div className="z-10 mb-8 mt-4">
+        <Link href="/" className="text-4xl font-black tracking-tight text-white drop-shadow-md hover:scale-105 transition-transform duration-300 block">LinkRent.</Link>
       </div>
 
-      {/* Right side - Signup Form */}
-      <div className="w-full md:w-1/2 flex flex-col relative overflow-y-auto">
-        {/* Mobile Header */}
-        <div className="md:hidden p-6 absolute top-0 left-0 right-0 flex justify-center bg-white/80 backdrop-blur-md z-20">
-          <Link href="/" className="text-2xl font-black tracking-tight text-brand">LinkRent.</Link>
+      <div className="w-full max-w-md relative z-10">
+        {/* Animated Cartoon Characters sitting on top of the box */}
+        <div className="w-full absolute -top-28 left-0 right-0 flex justify-center pointer-events-none">
+          <InteractiveCharacter focusedField={focusedField} emailValue={formData.email} />
         </div>
-
-        <main className="flex-1 flex items-center justify-center p-6 lg:p-12 mt-16 md:mt-0">
-          <div className="w-full max-w-md">
-            {success ? (
-              <div className="text-center bg-white p-8 rounded-2xl shadow-xl shadow-brand/5 border border-slate-100">
-                <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-6">
-                  <svg className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
-                </div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-3">Check your inbox</h3>
-                <p className="text-slate-600 mb-8 leading-relaxed">
-                  We've sent a verification link to <strong>{formData.email}</strong>. Please click the link to activate your account.
-                </p>
-                
-                <div className="bg-amber-50 border border-amber-200 text-amber-700 p-4 rounded-xl text-sm mb-8 text-left flex items-start">
-                  <svg className="w-5 h-5 mr-3 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                  </svg>
-                  <span>If you don't see the email within a minute, please check your <strong>Spam</strong> or <strong>Junk</strong> folder.</span>
-                </div>
-                
-                <Link href="/login" className="inline-block w-full py-3.5 bg-brand text-white rounded-xl font-bold hover:bg-brand-hover transition-colors shadow-md shadow-brand/20">
-                  Return to Login
-                </Link>
+        
+        {/* Main Signup Card */}
+        <main className="bg-white rounded-3xl shadow-2xl shadow-brand/40 border border-white p-8 md:p-10 relative pt-12">
+          
+          {success ? (
+            <div className="text-center">
+              <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-6 shadow-inner">
+                <svg className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
               </div>
-            ) : (
-              <>
-                <div className="mb-10 text-center md:text-left">
-                  <h2 className="text-3xl font-bold text-slate-900 mb-2">Create an Account</h2>
-                  <p className="text-slate-500 font-medium">Join LinkRent and start earning today.</p>
-                </div>
-            
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-6 text-sm flex items-center shadow-sm">
-                <svg className="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd"></path></svg>
-                {error}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Full Name</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="John Doe"
-                  className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-slate-900 bg-slate-50 focus:bg-white transition-colors shadow-sm"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  onFocus={() => setFocusedField('name')}
-                  onBlur={() => setFocusedField('none')}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Email Address</label>
-                <input
-                  type="email"
-                  required
-                  placeholder="name@example.com"
-                  className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-slate-900 bg-slate-50 focus:bg-white transition-colors shadow-sm"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  onFocus={() => setFocusedField('email')}
-                  onBlur={() => setFocusedField('none')}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1.5">WhatsApp Number</label>
-                <input
-                  type="tel"
-                  required
-                  placeholder="+91 9876543210"
-                  className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-slate-900 bg-slate-50 focus:bg-white transition-colors shadow-sm"
-                  value={formData.whatsappNumber}
-                  onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
-                  onFocus={() => setFocusedField('whatsapp')}
-                  onBlur={() => setFocusedField('none')}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Password</label>
-                <input
-                  type="password"
-                  required
-                  placeholder="••••••••"
-                  className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-slate-900 bg-slate-50 focus:bg-white transition-colors shadow-sm"
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  onFocus={() => setFocusedField('password')}
-                  onBlur={() => setFocusedField('none')}
-                />
-                <p className="text-xs text-slate-500 mt-2">Must be at least 8 characters.</p>
+              <h3 className="text-2xl font-bold text-slate-900 mb-3">Check your inbox</h3>
+              <p className="text-slate-600 mb-8 leading-relaxed">
+                We've sent a verification link to <strong>{formData.email}</strong>. Please click the link to activate your account.
+              </p>
+              
+              <div className="bg-amber-50 border border-amber-200 text-amber-700 p-4 rounded-xl text-sm mb-8 text-left flex items-start shadow-sm">
+                <svg className="w-5 h-5 mr-3 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                <span>If you don't see the email within a minute, please check your <strong>Spam</strong> or <strong>Junk</strong> folder.</span>
               </div>
               
-              <button
-                type="submit"
-                disabled={loading}
-                onMouseEnter={() => setFocusedField('submit')}
-                onMouseLeave={() => setFocusedField('none')}
-                className="w-full py-3.5 bg-brand text-white rounded-xl font-bold hover:bg-brand-hover hover:shadow-lg hover:shadow-brand/20 transition-all disabled:opacity-50 disabled:hover:shadow-none mt-4 text-lg"
-              >
-                {loading ? (
-                  <span className="flex items-center justify-center">
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                    Creating account...
-                  </span>
-                ) : "Sign Up"}
-              </button>
-            </form>
+              <Link href="/login" className="inline-block w-full py-3.5 bg-brand text-white rounded-xl font-bold hover:bg-brand-hover hover:shadow-lg transition-all shadow-md shadow-brand/20">
+                Return to Login
+              </Link>
+            </div>
+          ) : (
+            <>
+              <div className="mb-8 text-center">
+                <h2 className="text-3xl font-bold text-slate-900 mb-2">Create an Account</h2>
+                <p className="text-slate-500 font-medium">Join LinkRent and start earning today.</p>
+              </div>
+          
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-6 text-sm flex items-center shadow-sm animate-pulse">
+              <svg className="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd"></path></svg>
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Full Name</label>
+              <input
+                type="text"
+                required
+                placeholder="John Doe"
+                className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-slate-900 bg-slate-50 focus:bg-white transition-colors shadow-sm"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onFocus={() => setFocusedField('name')}
+                onBlur={() => setFocusedField('none')}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Email Address</label>
+              <input
+                type="email"
+                required
+                placeholder="name@example.com"
+                className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-slate-900 bg-slate-50 focus:bg-white transition-colors shadow-sm"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                onFocus={() => setFocusedField('email')}
+                onBlur={() => setFocusedField('none')}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-1.5">WhatsApp Number</label>
+              <input
+                type="tel"
+                required
+                placeholder="+91 9876543210"
+                className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-slate-900 bg-slate-50 focus:bg-white transition-colors shadow-sm"
+                value={formData.whatsappNumber}
+                onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
+                onFocus={() => setFocusedField('whatsapp')}
+                onBlur={() => setFocusedField('none')}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Password</label>
+              <input
+                type="password"
+                required
+                placeholder="••••••••"
+                className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand focus:border-brand outline-none text-slate-900 bg-slate-50 focus:bg-white transition-colors shadow-sm"
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                onFocus={() => setFocusedField('password')}
+                onBlur={() => setFocusedField('none')}
+              />
+              <p className="text-xs text-slate-500 mt-2">Must be at least 8 characters.</p>
+            </div>
             
-            <p className="text-center text-slate-600 font-medium mt-8 pb-8 md:pb-0">
+            <button
+              type="submit"
+              disabled={loading}
+              onMouseEnter={() => setFocusedField('submit')}
+              onMouseLeave={() => setFocusedField('none')}
+              className="w-full py-3.5 bg-brand text-white rounded-xl font-bold hover:bg-brand-hover hover:shadow-lg hover:shadow-brand/30 transition-all disabled:opacity-50 disabled:hover:shadow-none mt-2 text-lg"
+            >
+              {loading ? (
+                <span className="flex items-center justify-center">
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                  Creating account...
+                </span>
+              ) : "Sign Up"}
+            </button>
+          </form>
+          
+          <div className="mt-8 pt-6 border-t border-slate-100">
+            <p className="text-center text-slate-600 font-medium">
               Already have an account? <Link href="/login" className="text-brand font-bold hover:text-brand-hover transition-colors">Log in</Link>
             </p>
-            </>
-            )}
           </div>
+          </>
+          )}
         </main>
       </div>
     </div>
