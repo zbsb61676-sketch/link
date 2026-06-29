@@ -47,26 +47,13 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen relative flex flex-col items-center justify-center p-4 md:p-8 overflow-hidden">
-      {/* Animated Mesh Gradient Background */}
-      <style>{`
-        @keyframes gradientShift {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        .animated-bg {
-          background: linear-gradient(-45deg, #0ea5e9, #3b82f6, #6366f1, #8b5cf6, #ec4899);
-          background-size: 400% 400%;
-          animation: gradientShift 15s ease infinite;
-        }
-      `}</style>
-      <div className="animated-bg absolute inset-0 z-0"></div>
-
-      {/* Abstract Glowing Orbs in Background */}
+    <div className="min-h-screen relative flex flex-col items-center justify-center p-4 md:p-8 overflow-hidden bg-gradient-to-br from-blue-900 via-indigo-900 to-violet-900">
+      
+      {/* Abstract Glowing Orbs in Background (Lightweight) */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
-        <div className="absolute -bottom-32 -left-32 w-[30rem] h-[30rem] bg-cyan-300/30 rounded-full blur-3xl mix-blend-screen animate-pulse duration-1000 transform-gpu"></div>
-        <div className="absolute top-1/4 right-1/4 w-[25rem] h-[25rem] bg-fuchsia-400/20 rounded-full blur-3xl mix-blend-screen animate-pulse duration-700 transform-gpu"></div>
+        {/* We use radial-gradient instead of CSS blur to save 90% GPU usage */}
+        <div className="absolute -bottom-32 -left-32 w-[40rem] h-[40rem] rounded-full mix-blend-screen opacity-40 animate-pulse duration-1000 transform-gpu" style={{ background: 'radial-gradient(circle, rgba(103,232,249,0.3) 0%, rgba(103,232,249,0) 70%)' }}></div>
+        <div className="absolute top-1/4 right-1/4 w-[30rem] h-[30rem] rounded-full mix-blend-screen opacity-30 animate-pulse duration-700 transform-gpu" style={{ background: 'radial-gradient(circle, rgba(232,121,249,0.3) 0%, rgba(232,121,249,0) 70%)' }}></div>
       </div>
       
       {/* Falling Flowers Animation (with fireflies) */}
