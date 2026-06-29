@@ -13,15 +13,35 @@ const MOCK_EVENTS = [
 ];
 
 export default function SocialProofTicker() {
+  const [eventsList, setEventsList] = useState(MOCK_EVENTS);
   const [currentEvent, setCurrentEvent] = useState(MOCK_EVENTS[0]);
   const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    // Fetch real events
+    const fetchLiveEvents = async () => {
+      try {
+        const res = await fetch('/api/notifications/live');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.events && data.events.length > 0) {
+            setEventsList(data.events);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch live notifications", err);
+      }
+    };
+    
+    fetchLiveEvents();
+  }, []);
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
 
     const cycleEvent = () => {
-      // Pick a random event
-      const randomEvent = MOCK_EVENTS[Math.floor(Math.random() * MOCK_EVENTS.length)];
+      // Pick a random event from the active list
+      const randomEvent = eventsList[Math.floor(Math.random() * eventsList.length)];
       setCurrentEvent(randomEvent);
       
       // Show it
@@ -46,7 +66,7 @@ export default function SocialProofTicker() {
     }, 3000);
 
     return () => clearTimeout(timeoutId);
-  }, []);
+  }, [eventsList]);
 
   return (
     <div 
