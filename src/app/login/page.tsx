@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import InteractiveCharacter from "@/components/InteractiveCharacter";
+import FallingFlowers from "@/components/FallingFlowers";
 
 function LoginContent() {
   const router = useRouter();
@@ -54,19 +55,32 @@ function LoginContent() {
         <div className="absolute top-1/4 right-1/4 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl"></div>
       </div>
       
+      {/* Falling Flowers Animation */}
+      <FallingFlowers />
+      
       {/* Brand Header */}
-      <div className="z-10 mb-8 mt-4">
-        <Link href="/" className="text-4xl font-black tracking-tight text-white drop-shadow-md hover:scale-105 transition-transform duration-300 block">LinkRent.</Link>
+      <div className="absolute top-6 left-6 md:top-10 md:left-10 z-30">
+        <Link href="/" className="text-3xl font-black tracking-tight text-white drop-shadow-md hover:scale-105 transition-transform duration-300 block">LinkRent.</Link>
       </div>
 
-      <div className="w-full max-w-md relative z-10">
+      <div className="w-full max-w-md relative z-10 mt-16 md:mt-0">
         {/* Animated Cartoon Characters sitting on top of the box */}
-        <div className="w-full absolute -top-28 left-0 right-0 flex justify-center pointer-events-none">
+        <div className="w-full absolute -top-28 left-0 right-0 flex justify-center pointer-events-none drop-shadow-2xl">
           <InteractiveCharacter focusedField={focusedField} emailValue={formData.email} />
         </div>
         
-        {/* Main Login Card */}
-        <main className="bg-white rounded-3xl shadow-2xl shadow-brand/40 border border-white p-8 md:p-10 relative pt-12">
+        {/* Main Login Card - Adding floating animation */}
+        <style>{`
+          @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+          }
+          .floating-card {
+            animation: float 6s ease-in-out infinite;
+          }
+        `}</style>
+        <main className="floating-card bg-white/95 backdrop-blur-xl rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-white p-8 md:p-10 relative pt-12">
           
           <div className="mb-8 text-center">
             <h2 className="text-3xl font-bold text-slate-900 mb-2">Welcome Back</h2>
