@@ -7,7 +7,7 @@ import { prisma } from "@/lib/prisma";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import SocialProofTicker from "@/components/SocialProofTicker";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600; // Cache the page for 1 hour for extreme speed, revalidating in background
 
 export default async function Home() {
   const aggregate = await prisma.paymentRecord.aggregate({
