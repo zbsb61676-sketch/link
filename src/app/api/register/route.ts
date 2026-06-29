@@ -57,31 +57,32 @@ export async function POST(req: Request) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    const token = crypto.randomUUID();
 
-    const user = await prisma.user.create({
-      data: {
+    await prisma.pendingUser.upsert({
+      where: { email: sanitizedEmail },
+      update: {
+        name: sanitizedName,
+        password: hashedPassword,
+        whatsappNumber: sanitizedWhatsapp,
+        token,
+        expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
+      },
+      create: {
         name: sanitizedName,
         email: sanitizedEmail,
         password: hashedPassword,
         whatsappNumber: sanitizedWhatsapp,
-      },
-    });
-
-    const token = crypto.randomUUID();
-    
-    await prisma.verificationToken.create({
-      data: {
-        identifier: sanitizedEmail,
         token,
         expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
-      }
+      },
     });
 
     // Send verification email
     const { sendVerificationEmail } = await import("@/lib/email");
     await sendVerificationEmail(sanitizedEmail, token);
 
-    return NextResponse.json({ user: { id: user.id, email: user.email, name: user.name } }, { status: 201 });
+    return NextResponse.json({ message: "Verification email sent", email: sanitizedEmail }, { status: 201 });
   } catch (error: any) {
     console.error("================ REGISTRATION ERROR ================");
     console.error(error);

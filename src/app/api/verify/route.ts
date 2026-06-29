@@ -9,33 +9,52 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing token" }, { status: 400 });
     }
 
-    const verificationToken = await prisma.verificationToken.findUnique({
+    const pendingUser = await prisma.pendingUser.findUnique({
       where: { token },
     });
 
-    if (!verificationToken) {
+    if (!pendingUser) {
+      // Also check standard VerificationToken just in case there are old tokens
+      const oldToken = await prisma.verificationToken.findUnique({ where: { token } });
+      if (oldToken) {
+        if (oldToken.expires < new Date()) {
+          await prisma.verificationToken.delete({ where: { token } });
+          return NextResponse.json({ error: "Token has expired. Please sign up again." }, { status: 400 });
+        }
+        await prisma.user.update({
+          where: { email: oldToken.identifier },
+          data: { emailVerified: new Date() },
+        });
+        await prisma.verificationToken.delete({ where: { token } });
+        return NextResponse.json({ success: true }, { status: 200 });
+      }
+
       return NextResponse.json({ error: "Invalid token" }, { status: 400 });
     }
 
-    if (verificationToken.expires < new Date()) {
-      await prisma.verificationToken.delete({ where: { token } });
+    if (pendingUser.expires < new Date()) {
+      await prisma.pendingUser.delete({ where: { token } });
       return NextResponse.json({ error: "Token has expired. Please sign up again." }, { status: 400 });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email: verificationToken.identifier },
+    // Check if user already exists somehow
+    const existingUser = await prisma.user.findUnique({
+      where: { email: pendingUser.email }
     });
 
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 400 });
+    if (!existingUser) {
+      await prisma.user.create({
+        data: {
+          name: pendingUser.name,
+          email: pendingUser.email,
+          password: pendingUser.password,
+          whatsappNumber: pendingUser.whatsappNumber,
+          emailVerified: new Date(),
+        }
+      });
     }
 
-    await prisma.user.update({
-      where: { email: verificationToken.identifier },
-      data: { emailVerified: new Date() },
-    });
-
-    await prisma.verificationToken.delete({
+    await prisma.pendingUser.delete({
       where: { token },
     });
 
