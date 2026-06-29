@@ -59,10 +59,55 @@ function LoginContent() {
         {/* Abstract decorative elements */}
         <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
         <div className="absolute top-32 -right-32 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-cyan-400/20 rounded-full blur-2xl"></div>
         
-        <div className="relative z-10 text-brand-100 font-medium">
-          Trusted by over 1,000+ professionals worldwide.
+        {/* Animated Cartoon SVG - Waving Robot */}
+        <div className="absolute right-10 top-1/2 -translate-y-1/2 w-80 h-80 z-20 hidden xl:block">
+          <svg viewBox="0 0 400 400" className="w-full h-full drop-shadow-2xl">
+            {/* Hovering Animation Container */}
+            <g className="animate-[bounce_3s_ease-in-out_infinite]">
+              {/* Body */}
+              <rect x="140" y="160" width="120" height="140" rx="30" fill="#ffffff" />
+              <rect x="150" y="170" width="100" height="120" rx="20" fill="#f8fafc" />
+              
+              {/* Head */}
+              <g className="animate-[pulse_4s_ease-in-out_infinite]">
+                <rect x="130" y="60" width="140" height="90" rx="40" fill="#ffffff" />
+                <rect x="140" y="70" width="120" height="70" rx="30" fill="#0f172a" />
+                
+                {/* Eyes */}
+                <circle cx="170" cy="105" r="12" fill="#38bdf8" className="animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite]" />
+                <circle cx="170" cy="105" r="8" fill="#ffffff" />
+                <circle cx="230" cy="105" r="12" fill="#38bdf8" className="animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite_0.5s]" />
+                <circle cx="230" cy="105" r="8" fill="#ffffff" />
+                
+                {/* Smile */}
+                <path d="M 170 125 Q 200 145 230 125" stroke="#38bdf8" strokeWidth="6" strokeLinecap="round" fill="none" />
+              </g>
+              
+              {/* Antenna */}
+              <line x1="200" y1="60" x2="200" y2="30" stroke="#ffffff" strokeWidth="6" strokeLinecap="round" />
+              <circle cx="200" cy="20" r="10" fill="#fcd34d" className="animate-pulse" />
+              
+              {/* Left Arm (Waving) */}
+              <g className="origin-[130px_190px] animate-[spin_2s_ease-in-out_infinite_alternate]" style={{ transformOrigin: '130px 190px' }}>
+                <rect x="70" y="175" width="60" height="30" rx="15" fill="#ffffff" />
+                <circle cx="80" cy="190" r="20" fill="#38bdf8" />
+              </g>
+              
+              {/* Right Arm */}
+              <rect x="270" y="175" width="60" height="30" rx="15" fill="#ffffff" transform="rotate(30 270 175)" />
+              <circle cx="320" cy="205" r="20" fill="#38bdf8" />
+              
+              {/* Wheels / Base */}
+              <path d="M 160 300 L 240 300 L 260 330 L 140 330 Z" fill="#94a3b8" />
+              <circle cx="170" cy="330" r="15" fill="#0f172a" />
+              <circle cx="230" cy="330" r="15" fill="#0f172a" />
+            </g>
+            
+            {/* Sparkles */}
+            <path d="M 320 80 L 330 60 L 340 80 L 360 90 L 340 100 L 330 120 L 320 100 L 300 90 Z" fill="#fcd34d" className="animate-pulse origin-center scale-75" />
+            <path d="M 60 140 L 65 125 L 70 140 L 85 145 L 70 150 L 65 165 L 60 150 L 45 145 Z" fill="#fcd34d" className="animate-pulse origin-center scale-50" style={{ animationDelay: '1s' }} />
+          </svg>
         </div>
       </div>
 

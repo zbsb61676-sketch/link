@@ -75,8 +75,63 @@ export default function SignupPage() {
         </div>
         
         {/* Abstract decorative elements */}
-        <div className="absolute -top-32 -right-32 w-96 h-96 bg-brand/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-10 -left-10 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-32 -right-32 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl"></div>
+        
+        {/* Animated Cartoon SVG - Rocket Launching */}
+        <div className="absolute right-10 top-1/2 -translate-y-1/2 w-80 h-80 z-20 hidden xl:block">
+          <svg viewBox="0 0 400 400" className="w-full h-full drop-shadow-2xl">
+            {/* Stars Background */}
+            <g className="animate-[pulse_3s_ease-in-out_infinite]">
+              <circle cx="100" cy="80" r="3" fill="#ffffff" />
+              <circle cx="280" cy="50" r="4" fill="#fcd34d" />
+              <circle cx="320" cy="120" r="2" fill="#ffffff" />
+              <circle cx="80" cy="200" r="3" fill="#38bdf8" />
+              <circle cx="340" cy="250" r="4" fill="#ffffff" />
+            </g>
+
+            {/* Cloud Bottom */}
+            <path d="M 120 320 Q 150 280 200 320 Q 250 280 280 320 Z" fill="#ffffff" opacity="0.8" className="animate-[pulse_4s_ease-in-out_infinite]" />
+
+            {/* Hovering Rocket */}
+            <g className="animate-[bounce_2s_ease-in-out_infinite]">
+              {/* Flames */}
+              <g className="animate-[pulse_0.5s_ease-in-out_infinite]">
+                <path d="M 180 280 L 200 340 L 220 280 Z" fill="#ef4444" />
+                <path d="M 190 280 L 200 320 L 210 280 Z" fill="#f59e0b" />
+                <path d="M 195 280 L 200 300 L 205 280 Z" fill="#fef08a" />
+              </g>
+              
+              {/* Fins */}
+              <path d="M 160 260 L 140 280 L 160 230 Z" fill="#cbd5e1" />
+              <path d="M 240 260 L 260 280 L 240 230 Z" fill="#cbd5e1" />
+              
+              {/* Rocket Body */}
+              <path d="M 160 280 L 240 280 L 230 140 Q 200 80 170 140 Z" fill="#ffffff" />
+              
+              {/* Rocket Nose */}
+              <path d="M 170 140 Q 200 80 230 140 Z" fill="#ef4444" />
+              
+              {/* Window */}
+              <circle cx="200" cy="180" r="25" fill="#94a3b8" />
+              <circle cx="200" cy="180" r="18" fill="#38bdf8" />
+              <path d="M 190 170 Q 200 160 210 170" stroke="#ffffff" strokeWidth="4" strokeLinecap="round" fill="none" opacity="0.8" />
+              
+              {/* Little Cartoon Alien / Driver */}
+              <circle cx="200" cy="185" r="8" fill="#a3e635" className="animate-[ping_3s_cubic-bezier(0,0,0.2,1)_infinite]" />
+              <circle cx="200" cy="185" r="8" fill="#a3e635" />
+              <circle cx="196" cy="182" r="2" fill="#000" />
+              <circle cx="204" cy="182" r="2" fill="#000" />
+            </g>
+
+            {/* Speed Lines */}
+            <g stroke="#ffffff" strokeWidth="2" strokeLinecap="round" opacity="0.4" className="animate-[pulse_1s_ease-in-out_infinite]">
+              <line x1="120" y1="120" x2="120" y2="160" />
+              <line x1="280" y1="140" x2="280" y2="190" />
+              <line x1="140" y1="200" x2="140" y2="240" />
+            </g>
+          </svg>
+        </div>
       </div>
 
       {/* Right side - Signup Form */}
