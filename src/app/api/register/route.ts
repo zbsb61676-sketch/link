@@ -5,7 +5,7 @@ import crypto from "crypto";
 
 export async function POST(req: Request) {
   try {
-    const { name, email, password } = await req.json();
+    const { name, email, password, whatsappNumber } = await req.json();
 
     if (!email || !password || !name) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -33,6 +33,9 @@ export async function POST(req: Request) {
 
     // Sanitize name (basic)
     const sanitizedName = name.trim().replace(/[<>]/g, '');
+    
+    // Sanitize whatsappNumber
+    const sanitizedWhatsapp = whatsappNumber ? whatsappNumber.trim().replace(/[<>]/g, '') : null;
 
     const disposableDomains = [
       "mailinator.com", "yopmail.com", "tempmail.com", "10minutemail.com", 
@@ -60,6 +63,7 @@ export async function POST(req: Request) {
         name: sanitizedName,
         email: sanitizedEmail,
         password: hashedPassword,
+        whatsappNumber: sanitizedWhatsapp,
       },
     });
 

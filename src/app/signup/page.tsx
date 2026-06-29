@@ -7,7 +7,7 @@ import Navbar from "@/components/Navbar";
 
 export default function SignupPage() {
   const router = useRouter();
-  const [formData, setFormData] = useState({ name: "", email: "", password: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", password: "", whatsappNumber: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -41,7 +41,7 @@ export default function SignupPage() {
     <div className="flex min-h-screen flex-col bg-slate-50">
       <Navbar />
       <main className="flex-1 flex items-center justify-center p-4">
-        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 w-full max-w-md">
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 w-full max-w-md mt-8 mb-8">
           {success ? (
             <div className="text-center">
               <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
@@ -86,6 +86,17 @@ export default function SignupPage() {
                 className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand outline-none text-slate-900 bg-white"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">WhatsApp Number</label>
+              <input
+                type="tel"
+                required
+                placeholder="+91 9876543210"
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand outline-none text-slate-900 bg-white"
+                value={formData.whatsappNumber}
+                onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
               />
             </div>
             <div>
